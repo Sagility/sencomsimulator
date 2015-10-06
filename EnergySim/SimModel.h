@@ -1,6 +1,7 @@
 // EnergySim.h
 
 #pragma once
+#include "Stdafx.h"
 #include "config.h"
 #include "SimEngine.h"
 #include "Routes.h"
@@ -135,6 +136,15 @@ namespace EnergySim {
 		void finish();
 
 		SimModel(SimContext ctx){ _ctx = &ctx; }
+
+
+		SimLogEnvironment* env;
+		virtual ~SimModel()
+		{
+			if (env != NULL)
+				delete env;
+		}
+		
 
 
 		SimContext* context() const{ return _ctx;}

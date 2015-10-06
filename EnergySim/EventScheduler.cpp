@@ -9,7 +9,6 @@
 #include "Job.h"
 
 namespace EnergySim { 
-
 	bool operator<(const SchedulableEvent & se1, const SchedulableEvent & se2)
 	{
 		if(se1.time() < se2.time()) return true;
@@ -18,7 +17,6 @@ namespace EnergySim {
 		if(se1.priority() > se2.priority())return false;
 		return false;
 	}
-
 	EventScheduler::EventScheduler(ISimEngine *engine){
 
 		if(engine!=NULL){
@@ -29,11 +27,10 @@ namespace EnergySim {
 		_updatespersecond=0;
 		_calculatedevent = false;
 		_lastevent=0;
-		_current_events = new set<SchedulableEvent*,SchedulableEventPtrComp>();
+		_current_events = new multiset<SchedulableEvent*, SchedulableEventPtrComp>();
 		if (_updatespersecond == 0) _nextdelay = std::numeric_limits<double>::infinity();
 		else _nextdelay = 1000.0 / _updatespersecond;
 	}
-
 	void EventScheduler::Reset()
 	{
 		_lastevent = 0;
@@ -125,8 +122,10 @@ namespace EnergySim {
 	}
 	void EventScheduler::ScheduleJob(IJob *theJob, double theDelay,int priority)
 	{
-		if(theDelay>=0 )
+		if (theDelay >= 0)
 			_current_events->insert(new SchedulableEvent(this->simulated_time() + theDelay, theJob, priority));
+		else
+			_current_events->insert(new SchedulableEvent(this->simulated_time() + 0, theJob, priority));
 	}
 	void EventScheduler::ScheduleJobNow(IJob *theJob)
 	{
@@ -137,7 +136,6 @@ namespace EnergySim {
 		if(theTime> this->simulated_time())
 			_current_events->insert(new SchedulableEvent(theTime, theJob, priority));
 	}
-
 	void EventScheduler::OnJobFinished(IJob *theJob, EventArgs *theArgs){
 
 		if(theJob!=NULL){

@@ -13,7 +13,8 @@ namespace EnergySim
 	{
 		reader.itsValue = new TextReader("a");
 		reader.itsValue->model = this;
-		IEnvironment* env = SimLogEnvironment::CreateEnvironment();
+		env = (SimLogEnvironment*) SimLogEnvironment::CreateEnvironment();
+		env->set_use_file(true);
 		ISimEngine *engine = new SimEngine(env);
 		_ctx = new SimContext();
 		_ctx->set_engine(engine);
@@ -224,13 +225,11 @@ namespace EnergySim
 
 	void SimModel::runModel()
 	{
-		IEvent::publishEvent(EventType::ET_SIMULATION_START, 0, vector<long>(), _ctx->engine()->simulated_time());
-		
-		
-		IEvent::publishEvent(EventType::ET_SIMULATION_START, vector<string>(3) = { "A", "B", "C" });
+	//	IEvent::publishEvent(EventType::ET_SIMULATION_START, 0, vector<long>(), _ctx->engine()->simulated_time());
+	//	IEvent::publishEvent(EventType::ET_SIMULATION_START, vector<string>(3) = { "A", "B", "C" });
 		list<CombinedJobController*> *aController = new list<CombinedJobController*>();
 
-		SetterHandler::getSetterHandler()->triggerSetting(this);
+//		SetterHandler::getSetterHandler()->triggerSetting(this);
 
 		for (Order *o : orders.itsValue)
 		{

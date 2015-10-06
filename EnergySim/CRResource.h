@@ -66,7 +66,7 @@ namespace EnergySim
 	class IEntity;
 
 	using namespace std::placeholders;
-	class Resource : public IEntity,  protected ClaimReleaseResourceHandler<long>
+	class  Resource : public IEntity, protected ClaimReleaseResourceHandler<long>
 	{
 	public:
 		Resource(IClock* theClock, string theName) : itsCapacity(0, theClock), itsUsedCapacity(0, theClock)
@@ -116,7 +116,7 @@ namespace EnergySim
 			IEvent::publishEvent(ET_RESOURCE_USES, eID(), v2);
 			IEvent::publishEvent(ET_RESOURCE_USES, vector<string>(2) = { (name()), std::to_string(itsUsedCapacity.getValue()) });
 		}
-		string name();
+		string name(){ return itsName; };
 		void free(IClaimer<long>* theClaimer)
 		{
 			for (pair<IClaimer<long>*, int> aP : itsClaimers)

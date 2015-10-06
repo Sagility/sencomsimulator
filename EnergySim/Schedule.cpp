@@ -9,7 +9,6 @@
 #include "Schedule.h"
 #include "SimModel.h"
 
-
 namespace EnergySim
 {
 	SchedElement::SchedElement(long a, long b, long c, long d, list<long> e)
@@ -51,8 +50,6 @@ namespace EnergySim
 			}
 		}
 	}
-
-
 	void Schedule::printOutSchedule(string s1, string s2)
 	{
 		static bool started = false;
@@ -70,7 +67,6 @@ namespace EnergySim
 		pFile.close();
 
 	}
-
 	void Schedule::filterOutConcreteProcess()
 	{
 		for (Order* o : model->orders.itsValue)
@@ -78,8 +74,5 @@ namespace EnergySim
 			
 
 		}
-
 	}
-
-
 }

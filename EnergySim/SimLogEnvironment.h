@@ -17,7 +17,7 @@ namespace EnergySim {
         string _starttime;
         double _time_horizon;
 		IEnvironment(){};
-
+		virtual ~IEnvironment(){};
 	public:
 		virtual bool debug() const{return _debug;}
 		virtual void set_debug(bool debug){ _debug = debug;};

@@ -18,6 +18,7 @@
 #include "Attributes.h"
 #include "Attributes_Internal.h"
 #include "Routes.h"
+
 using namespace std;
 
 namespace EnergySim
@@ -143,7 +144,7 @@ namespace EnergySim
 		virtual void Execute(){};
 		virtual string classname() { return "ManipulatorJob"; }
 	};
-	class WaitForResourcesJob : public IJob
+	class ENERGYSIM_DLL_PUBLIC WaitForResourcesJob : public IJob
 	{
 	public:
 		WaitForResourcesJob(Process* theProcess, SimModel* theModel, long theRouteFollowerID);
@@ -163,7 +164,7 @@ namespace EnergySim
 		Process* itsResReq;
 		SimModel* model;
 	};
-	class FinishProcessJob : public IJob
+	class ENERGYSIM_DLL_PUBLIC FinishProcessJob : public IJob
 	{
 	private:
 		long itsFollowerID;
@@ -202,9 +203,11 @@ namespace EnergySim
 		SimEngineTimer *_timer;
 	public:
 		//constructor
-		DelayJob(SimContext *context, int msdelay) :IPreemptableJob(context)
+		DelayJob(SimContext *context, double msdelay) :IPreemptableJob(context)
 		{
-			if (msdelay > 0)
+			if (msdelay < 0)
+				msdelay = 0;
+			//if (msdelay > 0) // 150804
 			{
 				set_context(context);
 				delay = msdelay;
@@ -301,5 +304,30 @@ namespace EnergySim
 		long itsResource;
 		ResourceState itsState;
 	};
+
+	class ENERGYSIM_DLL_PUBLIC FunctionDoJob : public IJob
+	{
+	public:
+		//constructor
+		FunctionDoJob(SimContext *context, std::function<void()> theFP) :IJob(context)
+		{
+			fp = theFP;
+		}
+		~FunctionDoJob()
+		{
+		}
+		virtual string ToString()
+		{
+			return "FunctionDoJob\n";
+		}
+		virtual void Execute()
+		{
+			fp();
+		};
+		virtual string classname() { return "FunctionJob"; }
+	private:
+		std::function<void()> fp;
+	};
+	void ENERGYSIM_DLL_PUBLIC delayAndDoJobFunction(std::function<void()> theFP, SimModel* theModel, double theWait);
 
 }

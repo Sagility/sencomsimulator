@@ -47,6 +47,7 @@ namespace EnergySim {
 			if(se1->time() > se2->time())return false;
 			if(se1->priority() < se2->priority())return true;
 			if(se1->priority() > se2->priority())return false;
+		//	return false; // Change 150920
 			return (se1 < se2); // to make sure we have strict ordering, the set checks by switching lhs/rhs 
 		}
 	};

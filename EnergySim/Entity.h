@@ -6,16 +6,13 @@
 #include "SimEngine.h"
 #include <string>
 #include "Job.h"
-//#include "CRResource.h"
-//#include "Eventtypes.h"
 
 using namespace std;
 
 namespace EnergySim {
 
 	extern const string NamedEntity;
-
-	class IEntity
+	class ENERGYSIM_DLL_PUBLIC IEntity
 	{
 	public:
 		IEntity()
@@ -46,13 +43,13 @@ namespace EnergySim {
 		{
 		}
 		long eID() { return itsEID; }
-		string name() { return itsName; }
+	    string name() { return itsName; }
 		static IEntity* getByID(long theID);
 		static IEntity* getByName(string theName);
 	private:
 		long itsEID;
 		static long itsUniqueID;
-		static vector<IEntity*> itsEntities; 
+		static vector<IEntity*> itsEntities;
 		string itsName;
 	};
 	enum ResourceState

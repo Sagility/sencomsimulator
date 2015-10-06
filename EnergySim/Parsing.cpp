@@ -15,7 +15,6 @@ using namespace std;
 
 namespace EnergySim
 {
-
 	enum OperatorToken
 	{
 		EMPTY,
@@ -53,7 +52,6 @@ namespace EnergySim
 		std::stack<Token> dst = std::stack<Token>();
 		std::stack<Token> func = std::stack<Token>();
 	};
-
 	IParser* IParser::createParser(AttributeHandler* theHandler)
 	{
 		return new ConcreteParser(theHandler);
@@ -79,7 +77,6 @@ namespace EnergySim
 		string aALL = itsAH->getAllAttributes();
 //		std::cout << aALL << std::endl;
 		//aAH->replace();
-
 		return;
 	}
 	void ConcreteParser::Tokenize()
@@ -104,7 +101,6 @@ namespace EnergySim
 				
 				string aStr = x;
 				char aC = aStr[0];
-		//		std::cout << x << " ";
 				aM.itsToken = aStr;
 				switch (aC)
 				{
@@ -135,7 +131,6 @@ namespace EnergySim
 				if (aM.itsOper != OperatorToken::EMPTY)
 					dst.push(aM);
 			}
-	//		std::cout << std::endl;
 			s = m.suffix().str();
 		}
 
@@ -280,7 +275,7 @@ namespace EnergySim
 						aMPA.itsBV = new FunctionValue(bMPA.itsBV, aMPA.itsToken); // SHOULD BE A FUNCTION, LOOK BY NAME
 						aMPA.itsOper = VALUE;
 						dst.push(aMPA);
-						// Arguments are ina list on the dst
+						// Arguments are in a list on the dst
 					}
 				}
 			}

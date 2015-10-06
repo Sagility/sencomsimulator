@@ -8,7 +8,6 @@ using namespace std;
 namespace EnergySim
 {
 	class AttributeHandler;
-
 	class ENERGYSIM_DLL_PUBLIC IParser
 	{
 	public:

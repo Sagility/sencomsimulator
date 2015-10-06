@@ -25,7 +25,6 @@ namespace EnergySim {
 	{
 		if (_debug)
 		{
-		//	cout << msg << endl;
 			if(_use_file)
 			{
 				write2file(msg);

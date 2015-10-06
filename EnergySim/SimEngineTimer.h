@@ -22,8 +22,8 @@ namespace EnergySim {
 
 	class ENERGYSIM_DLL_PUBLIC ITimer{
 	protected: 
-		vector<TimerElapsedListener*> _elapsedlisteners;
-		vector<TimerPreemptedListener*> _preemptedlisteners;
+		vector<TimerElapsedListener*> _elapsedlisteners = vector<TimerElapsedListener*>();
+		vector<TimerPreemptedListener*> _preemptedlisteners = vector<TimerPreemptedListener*>();
 		virtual void NotifyElapsed(){
 			for(vector<TimerElapsedListener*>::const_iterator iter = _elapsedlisteners.begin(); iter != _elapsedlisteners.end(); ++iter)
 			{

@@ -110,9 +110,7 @@ namespace EnergySim
 		MyC(SetterHandler* aSS);
 		void setInt(int aI, int bI) { i = aI + bI; }
 		int i;
-
 	};
-
 	class ENERGYSIM_DLL_PUBLIC SetterHandler
 	{
 	public:
@@ -120,7 +118,6 @@ namespace EnergySim
 		SetterHandler();
 		void store(list<long> keys, ISetter* theBS);
 		ISetter* get(list<long> keys);
-
 		long getNB(string s)
 		{
 			map <string, long >::iterator it = aMap.find(s);
@@ -141,7 +138,6 @@ namespace EnergySim
 				p.second->setValue(false);
 			}
 		}
-
 		void store(std::string name, EnergySim::ISetter* setter)
 		{
 			manipulatorMap.insert(make_pair(name, setter));
@@ -153,15 +149,12 @@ namespace EnergySim
 				p->second->setValue(value);
 		}
 		void wakeUp(double time);
-		
 		map <long, ISetter*> bMap;
 		static SetterHandler* getSetterHandler();
 		void triggerSetting(SimModel* model);
 	private:
 		map <string, ISetter*> manipulatorMap;
 		map <pair<string, double>, double*> callMap;
-		
-
 		list<pair<list<long>, ISetter*>> keysAndSetters;
 		long startValue;
 		map < string, long > aMap;

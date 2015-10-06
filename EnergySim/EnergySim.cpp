@@ -4,7 +4,6 @@
 #include "EnergySim.h"
 
 namespace EnergySim {
-
 		SimContext::SimContext(ISimEngine* engine, SimModel *model)
 		{
 			_engine = engine;
@@ -18,5 +17,4 @@ namespace EnergySim {
 				_environment= _engine->environment();
 			}		
 		}
-
 };

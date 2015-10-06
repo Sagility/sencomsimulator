@@ -12,6 +12,7 @@
 #include "CRResource.h"
 #include "Schedule.h"
 #include <sstream>
+#include "SimModel.h"
 
 namespace EnergySim
 {
@@ -114,6 +115,17 @@ namespace EnergySim
 			}
 		}
 		NotifyJobFinished();
+	}
+
+	void ENERGYSIM_DLL_PUBLIC delayAndDoJobFunction(std::function<void()> theFP, SimModel* theModel, double theWait)
+	{
+		if (theWait < 0.0001)
+			theWait = 0.0;
+		CombinedJobController* aCJC = new CombinedJobController(theModel->context(), "delayAndDoJobFunctionDoer");
+		DelayJob* aDJob = new DelayJob(theModel->context(), theWait);
+		aCJC->AddJob(aDJob);
+		aCJC->AddJob(new FunctionDoJob(theModel->context(), theFP));
+		theModel->context()->engine()->ScheduleJobNow(aCJC);
 	}
 
 }

@@ -166,5 +166,4 @@ namespace EnergySim {
 		bool started() const {return _started;};
 		virtual string classname() { return "CombinedJobController";}
 	};
-
 }

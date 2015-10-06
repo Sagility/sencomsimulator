@@ -1,0 +1,69 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Express 2013 for Windows Desktop
+VisualStudioVersion = 12.0.31101.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "EnergySim", "EnergySim\EnergySim.vcxproj", "{ED5F41E0-72C8-455E-B973-7D6F6DB9A462}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "EnergySimtest", "EnergySimtest\EnergySimtest.vcxproj", "{6BF95D76-C47A-4067-A440-47EBC3AB4D5B}"
+	ProjectSection(ProjectDependencies) = postProject
+		{ED5F41E0-72C8-455E-B973-7D6F6DB9A462} = {ED5F41E0-72C8-455E-B973-7D6F6DB9A462}
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Debug|Mixed Platforms = Debug|Mixed Platforms
+		Debug|Win32 = Debug|Win32
+		Debug|x64 = Debug|x64
+		Release|Any CPU = Release|Any CPU
+		Release|Mixed Platforms = Release|Mixed Platforms
+		Release|Win32 = Release|Win32
+		Release|x64 = Release|x64
+		Test64|Any CPU = Test64|Any CPU
+		Test64|Mixed Platforms = Test64|Mixed Platforms
+		Test64|Win32 = Test64|Win32
+		Test64|x64 = Test64|x64
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{ED5F41E0-72C8-455E-B973-7D6F6DB9A462}.Debug|Any CPU.ActiveCfg = Debug|Win32
+		{ED5F41E0-72C8-455E-B973-7D6F6DB9A462}.Debug|Mixed Platforms.ActiveCfg = Debug|Win32
+		{ED5F41E0-72C8-455E-B973-7D6F6DB9A462}.Debug|Mixed Platforms.Build.0 = Debug|Win32
+		{ED5F41E0-72C8-455E-B973-7D6F6DB9A462}.Debug|Win32.ActiveCfg = Debug|Win32
+		{ED5F41E0-72C8-455E-B973-7D6F6DB9A462}.Debug|Win32.Build.0 = Debug|Win32
+		{ED5F41E0-72C8-455E-B973-7D6F6DB9A462}.Debug|x64.ActiveCfg = Debug|Win32
+		{ED5F41E0-72C8-455E-B973-7D6F6DB9A462}.Release|Any CPU.ActiveCfg = Release|Win32
+		{ED5F41E0-72C8-455E-B973-7D6F6DB9A462}.Release|Mixed Platforms.ActiveCfg = Release|Win32
+		{ED5F41E0-72C8-455E-B973-7D6F6DB9A462}.Release|Mixed Platforms.Build.0 = Release|Win32
+		{ED5F41E0-72C8-455E-B973-7D6F6DB9A462}.Release|Win32.ActiveCfg = Release|Win32
+		{ED5F41E0-72C8-455E-B973-7D6F6DB9A462}.Release|Win32.Build.0 = Release|Win32
+		{ED5F41E0-72C8-455E-B973-7D6F6DB9A462}.Release|x64.ActiveCfg = Release|x64
+		{ED5F41E0-72C8-455E-B973-7D6F6DB9A462}.Test64|Any CPU.ActiveCfg = Test64|Win32
+		{ED5F41E0-72C8-455E-B973-7D6F6DB9A462}.Test64|Mixed Platforms.ActiveCfg = Test64|Win32
+		{ED5F41E0-72C8-455E-B973-7D6F6DB9A462}.Test64|Mixed Platforms.Build.0 = Test64|Win32
+		{ED5F41E0-72C8-455E-B973-7D6F6DB9A462}.Test64|Win32.ActiveCfg = Test64|Win32
+		{ED5F41E0-72C8-455E-B973-7D6F6DB9A462}.Test64|Win32.Build.0 = Test64|Win32
+		{ED5F41E0-72C8-455E-B973-7D6F6DB9A462}.Test64|x64.ActiveCfg = Test64|x64
+		{6BF95D76-C47A-4067-A440-47EBC3AB4D5B}.Debug|Any CPU.ActiveCfg = Debug|Win32
+		{6BF95D76-C47A-4067-A440-47EBC3AB4D5B}.Debug|Mixed Platforms.ActiveCfg = Debug|Win32
+		{6BF95D76-C47A-4067-A440-47EBC3AB4D5B}.Debug|Mixed Platforms.Build.0 = Debug|Win32
+		{6BF95D76-C47A-4067-A440-47EBC3AB4D5B}.Debug|Win32.ActiveCfg = Debug|Win32
+		{6BF95D76-C47A-4067-A440-47EBC3AB4D5B}.Debug|Win32.Build.0 = Debug|Win32
+		{6BF95D76-C47A-4067-A440-47EBC3AB4D5B}.Debug|x64.ActiveCfg = Debug|Win32
+		{6BF95D76-C47A-4067-A440-47EBC3AB4D5B}.Release|Any CPU.ActiveCfg = Release|Win32
+		{6BF95D76-C47A-4067-A440-47EBC3AB4D5B}.Release|Mixed Platforms.ActiveCfg = Release|Win32
+		{6BF95D76-C47A-4067-A440-47EBC3AB4D5B}.Release|Mixed Platforms.Build.0 = Release|Win32
+		{6BF95D76-C47A-4067-A440-47EBC3AB4D5B}.Release|Win32.ActiveCfg = Release|Win32
+		{6BF95D76-C47A-4067-A440-47EBC3AB4D5B}.Release|Win32.Build.0 = Release|Win32
+		{6BF95D76-C47A-4067-A440-47EBC3AB4D5B}.Release|x64.ActiveCfg = Release|x64
+		{6BF95D76-C47A-4067-A440-47EBC3AB4D5B}.Test64|Any CPU.ActiveCfg = Test64|Win32
+		{6BF95D76-C47A-4067-A440-47EBC3AB4D5B}.Test64|Mixed Platforms.ActiveCfg = Test64|Win32
+		{6BF95D76-C47A-4067-A440-47EBC3AB4D5B}.Test64|Mixed Platforms.Build.0 = Test64|Win32
+		{6BF95D76-C47A-4067-A440-47EBC3AB4D5B}.Test64|Win32.ActiveCfg = Test64|Win32
+		{6BF95D76-C47A-4067-A440-47EBC3AB4D5B}.Test64|Win32.Build.0 = Test64|Win32
+		{6BF95D76-C47A-4067-A440-47EBC3AB4D5B}.Test64|x64.ActiveCfg = Test64|x64
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

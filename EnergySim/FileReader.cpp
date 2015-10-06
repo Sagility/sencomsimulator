@@ -24,7 +24,6 @@ namespace EnergySim {
 			for each (pair<string,string> p in *theList)
 			{
 				// int colNumber(p.first);
-
 			}
 			data.push_back(aList);
 		}
@@ -61,20 +60,13 @@ namespace EnergySim {
 		list <list < string >> data;
 		list <list < pair<string, string> >> itsData = list <list < pair<string, string> >>();
 		int itsRows;
-		
 	};
-
-
 	vector<string> FileReader::getLine()
 	{
-
 		return vector < string>();
 	}
-
-
 	FileReader::FileReader(string fileName, char seperator)
 	{
-		
 		std::ifstream infile;
 		infile = std::ifstream(fileName);
 		if (infile.bad())
@@ -103,9 +95,4 @@ namespace EnergySim {
 	{
 		return itsTable;
 	}
-
-
-
-
-
 }

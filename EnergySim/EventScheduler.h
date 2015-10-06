@@ -26,8 +26,8 @@ namespace EnergySim {
 		double _tolerance;
         bool _calculatedevent;
 
-		set<SchedulableEvent*,SchedulableEventPtrComp> *_current_events;
-		set<SchedulableEvent*,SchedulableEventPtrComp> *_future_events;
+		multiset<SchedulableEvent*,SchedulableEventPtrComp> *_current_events;
+	//	set<SchedulableEvent*,SchedulableEventPtrComp> *_future_events;
 		void ExecuteCurrentEvents();
 	public :
 		EventScheduler(ISimEngine *_engine);
@@ -36,7 +36,6 @@ namespace EnergySim {
 			if(_engine!=NULL) return _engine->simulated_time();
 			return -1;
 		}
-
 		void Scene_Step(double deltatime);
 		double last_step_time(){ return _lastevent; }
 		void Reset();
@@ -45,10 +44,7 @@ namespace EnergySim {
 		void ScheduleJob(IJob *theJob, double theDelay,int priority=0);
 		void EventScheduler::ScheduleJobNow(IJob *theJob);
 		void EventScheduler::ScheduleJobAt(IJob *theJob, double theTime, int priority=0);
-		
 		// IJobFinishedListener
 		virtual void OnJobFinished(IJob *theJob, EventArgs *theArgs);
-		
 	};
-
 }

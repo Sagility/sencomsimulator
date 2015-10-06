@@ -60,7 +60,7 @@ namespace EnergySim
 		model = theModel;
 		this->set_context(theModel->context());
 		itsRouteFollowerID = theRouteFollowerID;
-
+		//return;  // TESTING Remove later
 		SchedElement* aSE = model->inSchedule.itsValue->getSE(itsRouteFollowerID, itsResReq->processID);
 		if (aSE == NULL)
 			return;
@@ -189,10 +189,10 @@ namespace EnergySim
 	}
 
 
-	string Resource::name()
-	{
-		return itsName;
-	}
+	//string Resource::name()
+	//{
+	//	return itsName;
+	//}
 
 
 }

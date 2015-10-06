@@ -1,3 +1,4 @@
+#pragma once
 #include "stdafx.h"
 //#include "Entity.h"
 #include <memory>
@@ -65,6 +66,7 @@ namespace EnergySim
 
 	void IEvent::publishEvent(EventType theEventType, vector<string> IDs)
 	{
+		return;
 		string myFileName = fileName;
 		myFileName = "events.txt";// +myFileName;
 		ofstream pFile;
@@ -155,6 +157,7 @@ namespace EnergySim
 
 	void IEvent::publishEvent(EventType theEventType, long MainID, vector<long> IDs, double Time)
 	{
+		return;
 		unsigned _int8 * aPtr = aBuffer;
 		long aTmp = IDs.size();
 
@@ -201,8 +204,8 @@ namespace EnergySim
 	}
 	void IEvent::flush()
 	{
-		return;
-		if (counter < 1)
+		//return;
+		if (counter < 1000000)
 			return;
 		FILE* pFile;
 		if (started)
