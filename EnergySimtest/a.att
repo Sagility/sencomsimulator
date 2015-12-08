@@ -1,0 +1,12 @@
+simtime	0 simtime+simdelta
+simdelta 0 simdelta	
+currenttemp	130	currenttemp + sectemp * simdelta
+sectemp 	0	tempdelta/20 
+tempdelta	0	2*energyusage-1
+energyusage	0	memoryswitch(lessthan(currenttemp,lowtarget),lessthan(targettemp,currenttemp),energyusage)
+aa	0	lessthan(targettemp,currenttemp)
+bb	0  	lessthan(currenttemp,lowtarget)
+targettemp	200	targettemp
+lowtarget	160	lowtarget
+ovenon	0 ovenon
+oventemp	200	oventemp+ovenon*simdelta/100

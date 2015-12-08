@@ -22,7 +22,6 @@ namespace EnergySim {
 		if(ctx!=NULL){
 			_env=ctx->environment();
 		}
-
 	}
 	CombinedJobController::CombinedJobController(SimContext *ctx, string name):ICombinedJobController(ctx)
 	{
@@ -45,7 +44,6 @@ namespace EnergySim {
 		}
 		itsFollower = theFollower;
 	}
-
 	void CombinedJobController::InsertJob(IJob *theJob)
 	{
 		_jobqueue.push_front(theJob);
@@ -64,6 +62,18 @@ namespace EnergySim {
 			}
 		}
 	}
+	void CombinedJobController::RemoveJobsUntilJobID(int theJobID)
+	{
+		std::deque<IJob*>::iterator it = _jobqueue.begin();
+		while (it != _jobqueue.end())
+		{
+			if ((*it)->jobID == theJobID)
+				break;
+			IJob* job = *it;
+			it = _jobqueue.erase(it);
+			delete job;  //TODO Can we really delete it, the current job gets deleted twice
+		}
+	}	
 	void CombinedJobController::Start()
 	{
 		_started = true;
@@ -246,6 +256,7 @@ namespace EnergySim {
 		if (_current_job != NULL)
 		{
 			delete _current_job;
+			_current_job = NULL;
 		}
 	}
 }

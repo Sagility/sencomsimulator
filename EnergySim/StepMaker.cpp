@@ -16,6 +16,20 @@ ADD WAIT FOR TIME STEP
 Order has starttime and ID
 */
 
+class JobStep
+{
+	public:
+
+
+
+	protected:
+
+
+	private:
+
+
+};
+
 namespace EnergySim
 {
 	class DelayStep : public Step
@@ -116,7 +130,7 @@ namespace EnergySim
 	}
 	public: void generateSpecificJobs(CombinedJobController& theController)
 	{
-		theController.AddJob(new SetAttributeJob(itsHandler, itsAttribute, itsValue));
+		theController.AddJob(new SetAttributeJob(itsHandler, itsAttribute, itsValue, itsContext));
 	}
 	};
 	class WaitStep : public Step
@@ -135,7 +149,7 @@ namespace EnergySim
 	}
 	public: void generateSpecificJobs(CombinedJobController& theController)
 	{
-		theController.AddJob(new WaitForAttributeJob(itsHandler, itsAttribute, itsLowValue, itsHighValue));
+		theController.AddJob(new WaitForAttributeJob(itsHandler, itsAttribute, itsLowValue, itsHighValue,itsContext));
 	}
 	};
 	class LogStep : public Step
@@ -194,19 +208,64 @@ namespace EnergySim
 	{
 		long itsLotID, itsStepID;
 		Schedule* itsSchedule;
-	public: PublishScheduleStep(long theLotID, long theStepID, long theID, SimContext* theContext, Schedule* theSchedule)
+		public: PublishScheduleStep(long theLotID, long theStepID, long theID, SimContext* theContext, Schedule* theSchedule)
+		{
+			itsLotID = theLotID;
+			itsStepID = theStepID;
+			itsID = theID;
+			itsContext = theContext;
+			itsSchedule = theSchedule;
+		}
+		public: void generateSpecificJobs(CombinedJobController& theController);
+	};
+	class GoToIFStep : public Step
 	{
-		itsLotID = theLotID;
-		itsStepID = theStepID;
-		itsID = theID;
-		itsContext = theContext;
-		itsSchedule = theSchedule;
+		int itsJobID;
+
+		string itsKey;
+		int itsValue;
+		long itsLotID, itsStepID;
+		Schedule* itsSchedule;
+		public: GoToIFStep(int theJobID, int theValue, string theKey)
+		{
+			itsKey = theKey;
+			itsValue = theValue;
+			itsJobID = theJobID;
+		}
+		public: void generateSpecificJobs(CombinedJobController& theController)
+		{
+			theController.AddJob(new GOTOidJobIFKeyValue(itsJobID,  &theController,  itsKey, itsValue));
+		}
+	};
+	class IDStep : public Step
+	{
+		int itsValue;
+		public: IDStep( int theID)
+		{
+			itsValue = theID;
+		}
+		public: void generateSpecificJobs(CombinedJobController& theController)
+		{
+			theController.AddJob(new IDJob(itsValue,theController.context()));
+		}
+	};
+	class RunControlStep : public Step
+	{
+		int itsIntervall;
+		int itsHorizon;
+	public: RunControlStep(int theIntervall, int theHorizon, SimContext* theCtx)
+	{
+		itsIntervall = theIntervall;
+		itsHorizon = theHorizon;
 	}
-	public: void generateSpecificJobs(CombinedJobController& theController);
+	public: void generateSpecificJobs(CombinedJobController& theController)
+	{
+		theController.AddJob(new RunControlJob(itsIntervall, itsHorizon, theController.context(),theController));
+	}
 	};
 	void GetProcessStep::generateSpecificJobs(CombinedJobController& theController)
 	{
-		theController.AddJob(new WaitForResourcesJob(itsProcess, itsModel, theController.ID()));
+		theController.AddJob(new WaitForResourcesJob(itsProcess, itsModel, theController.ID(),&theController));
 	}
 	void PublishPreReqDoneStep::generateSpecificJobs(CombinedJobController& theController)
 	{
@@ -359,14 +418,12 @@ namespace EnergySim
 			if (!aRList->empty())
 				aP->itsAlternates.push_back(new ConcreteProcess(aRList, ConcreteProcessID++));
 			return new GetProcessStep(aP, model);
-
 		}
 		if (aStepName == EnergySim_NameConstants::FREE_STEP)
 		{
 			if (arg.size() > 0)
 				i = stoi(arg.front(), NULL);
 			arg.pop_front();
-			//FreeStep(, SimContext* theContext)
 			return new FreeProcessStep(i, model);
 		}
 		if (aStepName == EnergySim_NameConstants::STATE_SET)
@@ -385,6 +442,35 @@ namespace EnergySim
 		if (aStepName == EnergySim_NameConstants::EVENTSTEP)
 		{
 		}
+		if (aStepName == EnergySim_NameConstants::GOTOIFSTEP)
+		{
+			if (arg.size() > 0)
+				str = arg.front();
+			arg.pop_front();
+			if (arg.size() > 0)
+				i1 = stoi(arg.front(), NULL);
+			arg.pop_front();
+			if (arg.size() > 0)
+				i2 = stoi(arg.front(), NULL);
+			return new	GoToIFStep(i1, i2,str);
+		}
+		if (aStepName == EnergySim_NameConstants::RUNCONTROL)
+		{
+			if (arg.size() > 0)
+				i1 = stoi(arg.front(), NULL);
+			arg.pop_front();
+			if (arg.size() > 0)
+				i2 = stoi(arg.front(), NULL);
+			return new	RunControlStep(i1, i2,itsCtx);
+		}
+		if (aStepName == EnergySim_NameConstants::IDSTEP)
+		{
+			if (arg.size() > 0)
+				i = stoi(arg.front(), NULL);
+			arg.pop_front();
+			return new IDStep(i);
+		}
+
 		return NULL;
 	}
 }

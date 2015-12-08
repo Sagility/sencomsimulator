@@ -107,6 +107,9 @@ namespace EnergySim
 			if (itsInSchedule->empty())
 				return true;
 
+			if (aSE->time  > itsContext.engine()->simulated_time() + 0.1)
+				return false;
+
 			if (aSE->lotID == 26)
 				found = found;
 
@@ -118,7 +121,7 @@ namespace EnergySim
 			{
 				if (aSE->lotID == bSE->lotID)
 					if (aSE->processID == bSE->processID)
-						return true;
+							return true;
 				for (long aL :aSE->resID)			
 					for (long bL : bSE->resID)
 						if (aL==bL)

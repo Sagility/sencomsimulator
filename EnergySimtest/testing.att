@@ -1,0 +1,13 @@
+currenttemp	100	currenttemp + energyusage - 0.5
+energyusage	0	switch
+targettemp	200	targettemp
+lowtarget	190	lowtarget
+testing		1	targettemp*lowtarget+energyusage-38000
+testmer		1	(targettemp*lowtarget)+energyusage-38000
+simtime	0 simtime
+simdelta 0 simdelta	
+a		1	a+1
+b		1	(10*5)-4
+d	12	d
+
+

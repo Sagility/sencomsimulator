@@ -2,6 +2,10 @@
 #include "ClaimRelease.h"
 #include "CRResource.h"
 #include "SimModel.h"
+#include <ppl.h>
+
+using namespace concurrency;
+using namespace std;
 
 namespace EnergySim
 {
@@ -54,9 +58,10 @@ namespace EnergySim
 		model = theModel;
 		itsAssigner = assigner;
 	}
-	WaitForResourcesJob::WaitForResourcesJob(Process* theProcess, SimModel* theModel, long theRouteFollowerID)
+	WaitForResourcesJob::WaitForResourcesJob(Process* theProcess, SimModel* theModel, long theRouteFollowerID, CombinedJobController* theController)
 	{
-		itsResReq = theProcess;
+		itsController = theController;
+		itsResReq = theProcess->copy();
 		model = theModel;
 		this->set_context(theModel->context());
 		itsRouteFollowerID = theRouteFollowerID;
@@ -64,7 +69,15 @@ namespace EnergySim
 		SchedElement* aSE = model->inSchedule.itsValue->getSE(itsRouteFollowerID, itsResReq->processID);
 		if (aSE == NULL)
 			return;
-		itsResReq->itsAlternates.remove_if([aSE](ConcreteProcess* a) { return !(a->id == aSE->processModeID); });
+		/* Remove the alternates that are not compatibel with the schedule */	
+		if (itsResReq->itsAlternates.size() > 1)
+		{
+			bool found = false;
+			if (itsResReq->processID == aSE->processID)
+				found = true;
+			if (found)
+				itsResReq->itsAlternates.remove_if([aSE](ConcreteProcess* a) { return !(a->id == aSE->processModeID); });
+		}
 	}
 	void WaitForResourcesJob::claimResources()
 	{
@@ -72,7 +85,11 @@ namespace EnergySim
 	}
 	void ResourceHandler::wait(WaitForResourcesJob* aJ)
 	{
-		waiting.push_back(aJ);
+		SchedElement* aSE = model->inSchedule.itsValue->getSE(aJ->itsRouteFollowerID, aJ->itsResReq->processID);
+		if (aSE != NULL)
+			waiting.push_front(aJ);
+		else
+			waiting.push_back(aJ);
 		while (assignJob())	;
 	}
 
@@ -80,6 +97,11 @@ namespace EnergySim
 
 	bool ResourceHandler::assignJob()
 	{
+		int t = 56;
+		if (model->context()->engine()->simulated_time() > 400)
+			t = 78;
+		
+
 		for (WaitForResourcesJob* aJ : waiting)
 		{
 			Process* aP = aJ->itsResReq;
@@ -101,14 +123,16 @@ namespace EnergySim
 
 				if (!aCP->need->empty())
 					s2 += " " + aCP->need->front().second->name();
-				for (pair<long, Resource*> p : *(aCP->need))
+				for(pair<long, Resource*> p : *(aCP->need))
 				{
-					if (p.second->free() <p.first)
+					if (p.second->free() < p.first)
 					{}
 					else
 					{
 						p.second->getCapacity(p.first);
 						onGoing.push_back(pair<pair<long, long>, ConcreteProcess*>(pair<long, long>(aJ->itsRouteFollowerID,aP->processID),aCP));
+						aJ->itsController->addSlot("PROCESS", aP->processID);
+						aJ->itsController->addSlot("CONCRETE_PROCESS", aCP->id);
 						IEvent::publishEvent(ET_RESOURCE_CLAIM, vector<string>(2) = { (p.second->name()), "LOT_" + std::to_string(aJ->itsRouteFollowerID) });
 						IEvent::publishEvent(ET_PROCESS_START, vector<string>(3) = { (p.second->name()), "LOT" + std::to_string(aJ->itsRouteFollowerID), std::to_string(p.first) });
 						if (p.second->name() == "0")
@@ -172,27 +196,14 @@ namespace EnergySim
 		WaitForResourcesJob* aWFR = NULL;
 		list<Resource*>* aCRL =  new list<Resource*>();
 
-		// 
-
 		if (aWFR == NULL)
 			return false;
 		assignAJob(aWFR, aCRL);
 		return true;
 	};
 
-
 	IJob* ResourceHandler::getResources(long ProcessID, long RouteFollowerID)
 	{
-
-
 		return NULL;
 	}
-
-
-	//string Resource::name()
-	//{
-	//	return itsName;
-	//}
-
-
 }

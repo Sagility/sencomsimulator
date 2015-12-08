@@ -25,11 +25,12 @@ namespace EnergySim {
 			list<Step*> itsSteps;
 	};
 	class Resource;
-	class IRouteFollower : public IEntity, public IJobFinishedListener
+
+	class IRouteFollower : public IEntity, public IJobFinishedListener, public IRouteSlots
 	{
 		public:
 			void nextStep();
-			IRouteFollower(string route);
+			//IRouteFollower(string route);
 			long orderID() { return itsOrderID; }
 			Resource* primaryRes(long theProcessID);
 			void addClaimedByProcessID(long theProcessID, Resource* theClaimed);
@@ -46,6 +47,7 @@ namespace EnergySim {
 			CombinedJobController* itsCJC;
 			long itsOrderID;
 	};
+
 	class OperationDoer : public IRouteFollower
 	{
 		public: 

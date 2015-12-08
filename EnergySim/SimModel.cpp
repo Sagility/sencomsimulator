@@ -114,8 +114,8 @@ namespace EnergySim
 				tokens.pop_front();
 				int cap = stoi(tokens.front(), NULL);
 				double d = rand();
-				d = d / RAND_MAX;	// RANDOM STUFF
-				d = d / 10;
+				d = d / RAND_MAX;	// RANDOM STUFF 
+				
 				d = 1.05 - d;
 			//	cap = cap*d;
 				aRes->setCapacity(cap);
@@ -165,6 +165,9 @@ namespace EnergySim
 		}
 		model->itsParser.itsValue->getAttributeHandler()->registerForUpdates(model->context()->engine());
 		closeFile();
+		model->itsParser.itsValue->getAttributeHandler()->replace("simdelta", new ConstantValue(0));
+		//model->itsParser.itsValue->getAttributeHandler()->updateAllAttributes();
+		model->itsParser.itsValue->getAttributeHandler()->reportAllAttributes(0);
 	}
 	void TextReader::readSchedule()
 	{

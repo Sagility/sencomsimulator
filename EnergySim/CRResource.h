@@ -162,6 +162,16 @@ namespace EnergySim
 	class Process : public IEntity
 	{
 	public:
+		Process* copy()
+		{
+			Process* aP = new Process();
+			aP->processID = processID;
+			for each (auto var in itsAlternates)
+			{
+				aP->itsAlternates.push_back(var);
+			}
+			return aP;
+		}
 		long processID;
 		list<ConcreteProcess*> itsAlternates = list<ConcreteProcess*>();
 	};

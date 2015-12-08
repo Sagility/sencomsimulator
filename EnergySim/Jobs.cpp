@@ -45,6 +45,7 @@ namespace EnergySim
 			return;
 		}
 		itsSchedule->itsWaiters->push_back(this);
+		//finish();
 	}
 	void PublishPreReqDoneJob::Execute()
 	{
@@ -64,8 +65,6 @@ namespace EnergySim
 		}
 		else DelayElapsed();
 	}
-
-
 	void DelayJob::OnElapsed(ITimer *theTimer, EventArgs *theArgs)
 	{
 		DelayElapsed();
@@ -114,6 +113,23 @@ namespace EnergySim
 				return;
 			}
 		}
+		NotifyJobFinished();
+	}
+
+	void SetRouteFollower::Execute()
+	{
+		NotifyJobStarted();
+
+		CombinedJobController* aCJC = new CombinedJobController(_ctx);
+		itsFollower->addSlot(itsKey, itsValue);
+		NotifyJobFinished();
+	}
+
+	void GOTOidJobIFKeyValue::Execute()
+	{
+		NotifyJobStarted();
+		if( itsValue == itsController->getSlot(itsKey))
+			itsController->RemoveJobsUntilJobID(itsJobID);
 		NotifyJobFinished();
 	}
 

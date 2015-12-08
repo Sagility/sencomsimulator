@@ -19,8 +19,8 @@
 #include "Admin.h"
 #include "FileReader.h"
 
-//#include "ComplexResources.h"			// PROJECT DEPENDENT	
-//#include "Counter.h"					// PROJECT DEPENDENT
+#include "ComplexResources.h"			// PROJECT DEPENDENT	
+#include "Counter.h"					// PROJECT DEPENDENT
 
 //#include "xercesc\parsers\XercesDOMParser.hpp"
 //#include "xercesc\dom\DOM.hpp"
@@ -28,7 +28,6 @@
 //#include "xercesc\util\XMLString.hpp"
 //#include "xercesc\util\PlatformUtils.hpp"
 #include<iostream>
-
 #include "SemconInterface.h"
 
 using namespace SemconInterface;
@@ -54,6 +53,9 @@ int main3(int argc, char* argv[]);
 
 int main(int argc, char* argv[])
 {
+	return main3(argc, argv);
+
+
 	return SemconInterface::internalMain(argc, argv);
 	//return main3(argc, argv);
 }
@@ -87,9 +89,52 @@ int main2(int argc, char* argv[])
 	aSP->writeResult(name + "_result.txt", true);
 	writeLog(19);
 	return 0;
-
 }
 */
+
+
+class LoggerData
+{
+public:
+	void start(){};
+	void end(){};
+};
+
+class Logger
+{
+public:
+	Logger(LoggerData* theData)
+	{
+		itsData = theData;
+		itsData->start();
+	}
+	~Logger()
+	{
+		itsData->end();
+	}
+private:
+	LoggerData* itsData;
+};
+
+void createLogger()
+{
+	static LoggerData* aLD = new LoggerData();
+	Logger aLog(aLD);
+
+
+	int i = 23;
+
+	if (i == 12)
+	{
+
+
+	}
+	return;
+}
+
+
+
+
 void doTest(string s)
 {
 	string ret = s;
@@ -97,10 +142,13 @@ void doTest(string s)
 }
 int main3(int argc, char* argv[])
 {
+	createLogger();
 	writeLog(10);
 	SimModel* aM = new SimModel();
 	writeLog(11);
 	string name = string(argv[1]);
+
+	aM->readModel();
 	writeLog(12);
 	try
 	{
@@ -112,9 +160,11 @@ int main3(int argc, char* argv[])
 		}
 
 		std::function<void()> f_funcen = std::bind(doTest, "4");
-
 		aM->runModel();
 		double slutet = aM->context()->engine()->simulated_time();
+		AttributeHandler* aAH =  aM->itsParser.itsValue->getAttributeHandler();
+
+
 		delete aM;
 		return 0;
 	}
@@ -123,6 +173,7 @@ int main3(int argc, char* argv[])
 		writeLog(666);
 		return 0;
 	}
+
 	writeLog(18);
 	writeLog(19);
 	return 0;

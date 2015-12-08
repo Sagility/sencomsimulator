@@ -6,6 +6,7 @@
 #include <algorithm>
 #include "Job.h"
 #include "SimEngineTimer.h"
+#include <map>
 
 using namespace std;
 
@@ -18,7 +19,7 @@ namespace EnergySim {
 		int _num_remaining_jobs;
 		string _name;
 	public:
-		ICombinedJobController(SimContext *context):IJob(context){};
+		ICombinedJobController(SimContext *context) :IJob(context){}; 
         long ID() const {return _id; }
 		void ID(long theID) { _id = theID; }
 
@@ -39,6 +40,13 @@ namespace EnergySim {
         /// </summary>
         /// <param name="job">the job</param>
         virtual void RemoveJob(IJob* job)=0;
+
+		/// <summary>
+		///  Removes a job from the queue of jobs so that it is no longer processed by the ICombinedJobController
+		/// </summary>
+		/// <param name="job">the job</param>
+		virtual void RemoveJobsUntilJobID(int theJobID)=0;
+
 
         /// <summary>
         /// Removes the next job from the queue of jobs and returns it
@@ -81,7 +89,34 @@ namespace EnergySim {
 
     };
 	class IRouteFollower;
-	class ENERGYSIM_DLL_PUBLIC CombinedJobController : public ICombinedJobController, public IJobStartedListener, public IJobFinishedListener, public TimerElapsedListener
+	class IRouteSlots
+	{
+	public:
+		IRouteSlots(){};
+		~IRouteSlots(){};
+		void addSlot(string theKey, int theValue)
+		{
+			itsDic[theKey] = theValue;
+		}
+		void removeSlot(string theKey)
+		{
+			std::map<string, int>::iterator it;
+			it = itsDic.find(theKey);
+			if (it != itsDic.end())
+				itsDic.erase(it);
+		}
+		int getSlot(string theKey)
+		{
+			std::map<string, int>::iterator it;
+			it = itsDic.find(theKey);
+			if (it != itsDic.end())
+				return (*it).second;
+			return 0;
+		}
+	private:
+		map<string, int> itsDic = map<string, int>();
+	};
+	class ENERGYSIM_DLL_PUBLIC CombinedJobController : public ICombinedJobController, public IJobStartedListener, public IJobFinishedListener, public TimerElapsedListener, public IRouteSlots
 	{
 	protected:
 		static long _last_id;	
@@ -126,6 +161,8 @@ namespace EnergySim {
         /// </summary>
         /// <param name="job">the job</param>
         virtual void RemoveJob(IJob* job);
+
+		virtual void RemoveJobsUntilJobID(int theJobID);
 
         /// <summary>
         /// Removes the next job from the queue of jobs and returns it

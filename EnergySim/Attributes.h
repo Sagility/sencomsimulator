@@ -101,7 +101,7 @@ namespace EnergySim
 			{
 				std::string txt;
 				ofstream file;
-				file.open(itsFileName + ".csv", std::ios_base::app);
+				file.open(itsFileName + ".csv", std::ios_base::out);
 				file << itsStr;
 				file.close();
 			}
@@ -146,11 +146,14 @@ namespace EnergySim
 		}
 		virtual void OnNextStep(ISimEngine *theEngine, NextStepEventArgs *theArgs);
 
-		virtual void OnFinish(ISimEngine *theEngine, EventArgs *theArgs)
-		{
-			int i = 3;
-			IEvent::publishEvent(ET_SIMULATION_END, vector<string>(0));
-		}
+		virtual void OnFinish(ISimEngine *theEngine, EventArgs *theArgs);
+		//{
+		//	replace("simdelta", new ConstantValue(0));
+		//	updateAllAttributes();
+		//	reportAllAttributes(theEngine->simulated_time());
+		//	int i = 3;
+		//	IEvent::publishEvent(ET_SIMULATION_END, vector<string>(0));
+		//}
 
 		
 		bool addAttribute(BaseValue* theAttribute, string theName, double startValue)
@@ -218,7 +221,6 @@ namespace EnergySim
 		string getAllAttributes()
 		{
 			updateAllAttributes();
-			updateAllAttributes();
 			string aStr = "";
 			for (BaseAttributeValueHolder* aBAV : itsAttributes)
 			{
@@ -229,13 +231,13 @@ namespace EnergySim
 		void updateSimVariabels(double time);
 
 		void reportAllAttributes(double time)
-		 {
-			 itsReporter.startReporting(time);
-			 for (BaseAttributeValueHolder* aBAV : itsAttributes)
-			 {
-				 itsReporter.report(aBAV);
-			 }
-			 itsReporter.endReporting();
+		{
+			itsReporter.startReporting(time);
+			for (BaseAttributeValueHolder* aBAV : itsAttributes)
+			{
+				itsReporter.report(aBAV);
+			}
+			itsReporter.endReporting();
 		}
 		void updateAllAttributes()
 		 {
@@ -246,6 +248,7 @@ namespace EnergySim
 		 }
 		void reportAllAttributes()
 		 {
+			// reportAllAttributes(this->);
 		 }
 		void publishUpdates(string theAttribute, double theValue)
 		 {

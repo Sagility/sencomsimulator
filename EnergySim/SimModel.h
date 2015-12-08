@@ -114,6 +114,7 @@ namespace EnergySim {
 		void readModel(){ reader.itsValue->readModel(); }
 		void runModel();
 
+
 		void OnFinish(ISimEngine *theEngine, EventArgs *theArgs) { finish(); }
 		getSet<list<Route*>, SimModel> routes;
 		getSet<IParser*, SimModel> itsParser;
@@ -124,8 +125,7 @@ namespace EnergySim {
 		getSet<TextReader*, SimModel> reader;
 		getSet<list<Order*>, SimModel> orders;
 		ResourceHandler* itsResHandler;
-
-
+		
 		void(*ptr)(PreReqs*, getSet<PreReqs*, SimModel>) = myFunc < PreReqs*, SimModel >;
 
 		void addRoute(Route* aR){routes.itsValue.push_back(aR);}

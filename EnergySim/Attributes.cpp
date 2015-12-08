@@ -14,11 +14,20 @@ namespace EnergySim
 			return;
 		replace("simdelta", new ConstantValue(theArgs->delta()));
 		updateAllAttributes();
+		reportAllAttributes(theEngine->simulated_time());
 		double d = this->getAttribute("cost");
 		IEvent::publishEvent(ET_SIMULATION_UPDATE, vector<string>(0));
 		IEvent::publishEvent(ET_SIMULATION_COST, vector<string>(1) = { std::to_string(d) });
 	}
-
+	void  AttributeHandler::OnFinish(ISimEngine *theEngine, EventArgs *theArgs)
+	{
+		replace("simdelta", new ConstantValue(0));
+		reportAllAttributes(theEngine->simulated_time());
+		updateAllAttributes();
+		reportAllAttributes(theEngine->simulated_time());
+		int i = 3;
+		IEvent::publishEvent(ET_SIMULATION_END, vector<string>(0));
+	}
 
 	double AttributeLookUpValue::value()
 	{
@@ -48,7 +57,7 @@ namespace EnergySim
 	}
 	double AttributeFunctionHandler::memoryswitch(vector<double> arguments)
 	{
-		return 1;
+		//return 1;
 		if (arguments.size() < 3)
 			return 1;
 		if (arguments[0] > 0.5)

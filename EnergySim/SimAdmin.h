@@ -32,6 +32,9 @@ namespace EnergySim_NameConstants
 	const std::string STATE_SET = "SET_STATE";
 	const std::string WAIT_SETUP_STEP = "SETUP";
 	const std::string LOGSTEP = "LOG";
+	const std::string GOTOIFSTEP = "GOTOIF";
+	const std::string RUNCONTROL = "RUNCONTROL";
+	const std::string IDSTEP = "ID";
 	const std::string EVENTSTEP = "EVENT";
 }
 

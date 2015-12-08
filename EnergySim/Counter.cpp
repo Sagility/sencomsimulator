@@ -139,10 +139,6 @@ namespace EnergySim
 		if (inSystem.size() > 0)
 		{
 
-
-
-
-
 			for each (CounterUserInfo* var in inSystem)
 			{
 				double left = var->itsCounter->buckets[var->itsBucket].first;

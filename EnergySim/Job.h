@@ -115,6 +115,7 @@ namespace EnergySim {
 		 
 		virtual string classname() { return "IJob";}
 		virtual string ToString(){ return classname() ;} 
+		int jobID=0;
 	};
 
 	// Interface class for jobs with a priority

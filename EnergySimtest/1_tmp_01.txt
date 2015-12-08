@@ -1,0 +1,4 @@
+FirstSet,200,1000,500,True,True,False
+SecondSet,200,1000,500,False,True,True
+ThirdSet,60,1000,500,True,False,True
+FourthSet,500,1000,500,True,True,True

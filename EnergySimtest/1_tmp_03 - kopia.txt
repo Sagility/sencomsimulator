@@ -1,0 +1,78 @@
+1,64,3,510,Homo high,1,0,1,Homo high MFR,40,0,60
+1,64,3,510,Homo,1,45,0,Homo bimodal,40,0,60
+1,64,3,510,Homo,1,0,1,Homo CR,40,0,60
+1,64,3,510,Raco,1,0,1,Raco CR,40,0,60
+1,64,3,510,Raco,1,0,1,Raco high MFR,40,0,60
+1,57,3,510,Raco,1,0,1,Raco low MFR,40,0,60
+1,57,3,510,Raco,1,0,1,Raco pipe,40,0,60
+1,57,3,510,Heco,1,0,1,Heco pipe,40,0,60
+1,57,3,510,Heco,1,0,1,Heco low MFR,40,0,60
+1,73,3,510,Heco,1,0,1,Heco very high MFR,40,0,60
+1,64,3,510,Raco,1,0,1,Raco CR,40,0,60
+1,64,3,510,Raco,1,0,1,Raco high MFR,40,0,60
+1,57,3,510,Raco,1,0,1,Raco low MFR,40,0,60
+1,57,3,510,Raco,1,0,1,Raco pipe,40,0,60
+1,57,3,510,Heco,1,0,1,Heco pipe,40,0,60
+1,57,3,510,Heco,1,0,1,Heco low MFR,40,0,60
+1,73,3,510,Heco,1,0,1,Heco very high MFR,40,0,60
+1,45,3,510,Polymer,1,0,1,Terpolymer,40,0,60
+1,45,4,510,Raco,1,0,1,Butene-1 Raco,40,0,60
+1,64,4,510,Raco,1,0,1,Raco CR,40,0,60
+1,64,4,510,Raco,1,0,1,Raco high MFR,40,0,60
+1,57,4,510,Raco,1,0,1,Raco low MFR,40,0,60
+1,57,4,510,Raco,1,0,1,Raco pipe,40,0,60
+1,57,4,510,Heco,1,0,1,Heco pipe,40,0,60
+1,57,4,510,Heco,1,0,1,Heco low MFR,40,0,60
+1,73,4,510,Heco,1,0,1,Heco very high MFR,40,0,60
+2,64,3,510,Homo high,2,0,1,Homo high MFR,40,0,60
+2,64,3,510,Homo,2,0,1,Homo bimodal,40,0,60
+2,64,3,510,Homo,2,0,1,Homo CR,40,0,60
+2,64,3,510,Raco,2,0,1,Raco CR,40,0,60
+2,64,3,510,Raco,2,0,1,Raco high MFR,40,0,60
+2,57,3,510,Raco,2,0,1,Raco low MFR,40,0,60
+2,57,3,510,Raco,2,0,1,Raco pipe,40,0,60
+2,57,3,510,Heco,2,0,1,Heco pipe,40,0,60
+2,57,3,510,Heco,2,0,1,Heco low MFR,40,0,60
+2,73,3,510,Heco,2,0,1,Heco very high MFR,40,0,60
+2,64,3,510,Raco,2,0,1,Raco CR,40,0,60
+2,64,3,510,Raco,2,0,1,Raco high MFR,40,0,60
+2,57,3,510,Raco,2,0,1,Raco low MFR,40,0,60
+2,57,3,510,Raco,2,0,1,Raco pipe,40,0,60
+2,57,3,510,Heco,2,0,1,Heco pipe,40,0,60
+2,57,3,510,Heco,2,0,1,Heco low MFR,40,0,60
+2,73,3,510,Heco,2,0,1,Heco very high MFR,40,0,60
+2,45,3,510,Polymer,2,0,1,Terpolymer,40,0,60
+2,45,4,510,Raco,2,0,1,Butene-1 Raco,40,0,60
+2,64,4,510,Raco,2,0,1,Raco CR,40,0,60
+2,64,4,510,Raco,2,0,1,Raco high MFR,40,0,60
+2,57,4,510,Raco,2,0,1,Raco low MFR,40,0,60
+2,57,4,510,Raco,2,0,1,Raco pipe,40,0,60
+2,57,4,510,Heco,2,0,1,Heco pipe,40,0,60
+2,57,4,510,Heco,2,0,1,Heco low MFR,40,0,60
+2,73,4,510,Heco,2,0,1,Heco very high MFR,40,0,60
+3,64,3,510,Homo high,3,0,1,Homo high MFR,40,0,60
+3,64,3,510,Homo,3,0,1,Homo bimodal,40,0,60
+3,64,3,510,Homo,3,0,1,Homo CR,40,0,60
+3,64,3,510,Raco,3,0,1,Raco CR,40,0,60
+3,64,3,510,Raco,3,0,1,Raco high MFR,40,0,60
+3,57,3,510,Raco,3,0,1,Raco low MFR,40,0,60
+3,57,3,510,Raco,3,0,1,Raco pipe,40,0,60
+3,57,3,510,Heco,3,0,1,Heco pipe,40,0,60
+3,57,3,510,Heco,3,0,1,Heco low MFR,40,0,60
+3,73,3,510,Heco,3,0,1,Heco very high MFR,40,0,60
+3,64,3,510,Raco,3,0,1,Raco CR,40,0,60
+3,64,3,510,Raco,3,0,1,Raco high MFR,40,0,60
+3,57,3,510,Raco,3,0,1,Raco low MFR,40,0,60
+3,57,3,510,Raco,3,0,1,Raco pipe,40,0,60
+3,57,3,510,Heco,3,0,1,Heco pipe,40,0,60
+3,57,3,510,Heco,3,0,1,Heco low MFR,40,0,60
+3,73,3,510,Heco,3,0,1,Heco very high MFR,40,0,60
+3,45,3,510,Polymer,3,0,1,Terpolymer,40,0,60
+3,45,4,510,Raco,3,0,1,Butene-1 Raco,40,0,60
+3,64,4,510,Raco,3,0,1,Raco CR,40,0,60
+3,64,4,510,Raco,3,0,1,Raco high MFR,40,0,60
+3,57,4,510,Raco,3,0,1,Raco low MFR,40,0,60
+3,57,4,510,Raco,3,0,1,Raco pipe,40,0,60
+3,57,4,510,Heco,3,0,1,Heco pipe,40,0,60
+3,57,4,510,Heco,3,0,1,Heco low MFR,40,0,60
+3,73,4,510,Heco,3,0,1,Heco very high MFR,40,0,60

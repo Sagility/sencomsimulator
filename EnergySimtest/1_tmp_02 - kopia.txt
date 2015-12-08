@@ -1,0 +1,4 @@
+FFS,100,2000,65,Bag
+BigBag,100,1900,70,BigBag
+Bulk,300,2200,70,Bulk
+FastFFS,10,2600,80,Bag

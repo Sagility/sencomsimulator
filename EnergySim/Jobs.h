@@ -35,11 +35,12 @@ namespace EnergySim
 	class SetAttributeJob : public IJob
 	{
 	public: 
-		SetAttributeJob(AttributeHandler* theHandler, string theAttribute, double theValue)
+		SetAttributeJob(AttributeHandler* theHandler, string theAttribute, double theValue, SimContext* theCtx)
 		{
 			itsAttribute = theAttribute;
 			itsValue = theValue;
 			itsHandler = theHandler;
+			_ctx = theCtx;
 		}
 		virtual void Execute()
 		{
@@ -56,12 +57,13 @@ namespace EnergySim
 	class WaitForAttributeJob : public IJob, public IListenChange<string, double>
 	{
 		public: 
-			WaitForAttributeJob(AttributeHandler* theHandler, string theAttribute, double theLowValue, double theHighValue)
+			WaitForAttributeJob(AttributeHandler* theHandler, string theAttribute, double theLowValue, double theHighValue, SimContext* theContext)
 			{
 				itsAttribute = theAttribute;
 				itsHighValue = theHighValue;
 				itsLowValue = theLowValue;
 				itsHandler = theHandler;
+				_ctx = theContext;
 			}
 			virtual void valueChanged(string theAttribute, double theValue)
 			{
@@ -147,7 +149,7 @@ namespace EnergySim
 	class ENERGYSIM_DLL_PUBLIC WaitForResourcesJob : public IJob
 	{
 	public:
-		WaitForResourcesJob(Process* theProcess, SimModel* theModel, long theRouteFollowerID);
+		WaitForResourcesJob(Process* theProcess, SimModel* theModel, long theRouteFollowerID, CombinedJobController* theController);
 		virtual void finish()
 		{
 			NotifyJobFinished();
@@ -163,6 +165,7 @@ namespace EnergySim
 		void claimResources();
 		Process* itsResReq;
 		SimModel* model;
+		CombinedJobController* itsController;
 	};
 	class ENERGYSIM_DLL_PUBLIC FinishProcessJob : public IJob
 	{
@@ -290,6 +293,7 @@ namespace EnergySim
 		}
 		virtual void Dispose() { }
 	};
+
 	class SetStateJob : public IJob
 	{
 	public:
@@ -303,6 +307,85 @@ namespace EnergySim
 	private:
 		long itsResource;
 		ResourceState itsState;
+	};
+
+	class SetRouteFollower : public IJob
+	{
+	public:
+		SetRouteFollower(IRouteFollower* theFollower, string theKey, int theValue)
+		{
+			itsFollower = theFollower;
+			itsKey = theKey;
+			itsValue = theValue;
+		}
+		virtual void Execute();
+		virtual void Dispose() { }
+	private:
+		IRouteFollower* itsFollower;
+		string itsKey;
+		int itsValue;
+	};
+
+	class IDJob : public IJob
+	{
+	public:
+		IDJob(int theID, SimContext* theCtx)
+		{
+			jobID = theID; 
+			_ctx = theCtx;
+		}
+		virtual void Execute()
+		{
+			NotifyJobStarted();
+			NotifyJobFinished();
+		}
+		virtual void Dispose() { }
+	};
+	class RunControlJob : public IJob
+	{
+		int itsIntervall;
+		int itsHorizon;
+		CombinedJobController* itsController;
+	public:
+		RunControlJob(int theIntervall, int theHorizon, SimContext* theCtx, CombinedJobController& theController)
+		{
+			itsController = &theController;
+			itsIntervall = theIntervall;
+			itsHorizon = theHorizon;
+			_ctx = theCtx;
+		}
+		virtual void Execute()
+		{
+			NotifyJobStarted();
+			if (_ctx->engine()->simulated_time() > itsHorizon)
+				terminate;
+			if (itsIntervall > 0)
+			{
+				itsController->AddJob(new DelayJob(_ctx, itsIntervall));
+				itsController->AddJob(new RunControlJob(itsIntervall, itsHorizon, _ctx, *itsController));
+			}
+			NotifyJobFinished();
+		}
+		virtual void Dispose() { }
+	};
+	class GOTOidJobIFKeyValue : public IJob
+	{
+	public:
+		GOTOidJobIFKeyValue(int theID, CombinedJobController* theController, string theKey, int theValue)
+		{
+			itsJobID = theID;
+			itsController = theController;
+			itsKey = theKey;
+			itsValue = theValue;
+			_ctx = theController->context();
+		}
+		virtual void Execute();
+		virtual void Dispose() { }
+	private:
+		int itsJobID;
+		CombinedJobController* itsController;
+		string itsKey;
+		int itsValue;
 	};
 
 	class ENERGYSIM_DLL_PUBLIC FunctionDoJob : public IJob
@@ -322,7 +405,9 @@ namespace EnergySim
 		}
 		virtual void Execute()
 		{
+			NotifyJobStarted();
 			fp();
+			NotifyJobFinished();
 		};
 		virtual string classname() { return "FunctionJob"; }
 	private:

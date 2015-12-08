@@ -192,9 +192,6 @@ namespace SemconInterface
 
 		list<SchedJob*>* aL = new list<SchedJob*>();
 
-		/*
-		Combine schedjob and chain list.
-		*/
 
 		while (aCount > 0)
 		{
@@ -211,9 +208,6 @@ namespace SemconInterface
 		}
 		return;
 	}
-	// Find orders
-	// Find resources
-	// Find jobs
 	void combine(list<SchedJob*>* aL, list<SchedJob*>* bL)
 	{
 		for each (SchedJob* aSJ in *aL)
@@ -340,10 +334,6 @@ namespace SemconInterface
 			return aM;
 		}
 
-		/*
-		Ta ut resurserna.
-		*/
-
 		DOMDocument* aDoc = parser->adoptDocument();
 
 
@@ -363,9 +353,6 @@ namespace SemconInterface
 			string aName = findValue(aDN,attribute);
 			aCount--;
 		}
-		
-
-		//findScheduledJob(aDoc);
 
 		return aM;
 	}
@@ -418,6 +405,10 @@ namespace SemconInterface
 			DOMNode* aDN = aDNL->item(aSize - aCount);
 			string aName = findValue(aDN, attribute1);
 			string aCap = findValue(aDN, attribute2);
+			ResInSchedule* aRes = new ResInSchedule();
+			aRes->name = aName;
+			aRes->capacity = stoi(aCap);
+			_resources.push_back(aRes);
 			aCount--;
 		}
 		//findScheduledJob(aDoc);
@@ -454,10 +445,10 @@ namespace SemconInterface
 			return;
 		}
 		DOMDocument* aDoc = parser->adoptDocument();
-		DOMNode* aN = findNode(aDoc, "resources");
+		DOMNode* aN = findNode(aDoc, "jobs");
 		string b;
 
-		XMLCh* temp = XMLString::transcode("resource"); // First schedule level
+		XMLCh* temp = XMLString::transcode("job"); // First schedule level
 		DOMNodeList* aDNL = aDoc->getElementsByTagName(temp);
 
 		string attribute1 = "name";
@@ -468,7 +459,22 @@ namespace SemconInterface
 		{
 			DOMNode* aDN = aDNL->item(aSize - aCount);
 			string aName = findValue(aDN, attribute1);
-			string aCap = findValue(aDN, attribute2);
+			XMLCh* temp = XMLString::transcode("mode"); // First schedule level
+			list<DOMNode*> aList = list<DOMNode*>();
+			SchedJob* aJob = new SchedJob();
+			aJob->name = aName;
+			findNodes(aDN,"mode",&aList);
+			for each (DOMNode* var in aList)
+			{
+				SchedJobMode* aJobMode = new SchedJobMode();
+				aJob->modes.push_back(aJobMode);
+				aJobMode->duration = stoi(findValue(var, "duration"));
+				string aName = findValue(var, attribute1);
+				string aCap = findValue(var, attribute2);
+				aJobMode->resourceUse->push_back(make_pair(aName, stoi(aCap)));
+			}
+			_jobs.push_back(aJob);
+		//	string aCap = findValue(aDN, attribute2);
 			aCount--;
 		}
 		//findScheduledJob(aDoc);
@@ -481,7 +487,9 @@ namespace SemconInterface
 		string inFile1 = "output_A1.xml";
 		string inFile2 = "A1.xml";
 		SenComModel* aModel = SenComModel::getModel(inFile1, inFile2);
-		aModel->geResources(inFile1, inFile2);
+		aModel->geResources(inFile1, inFile2); 
+		aModel->getJobs(inFile1, inFile2);
+
 		return 0;
 	}
 
@@ -654,14 +662,14 @@ namespace SemconInterface
 			{
 				for each (CombinedJobController* var in loads)
 				{
-					var->AddJob(new WaitForResourcesJob(aP, aM, var->ID()));
+					var->AddJob(new WaitForResourcesJob(aP, aM, var->ID(),var));
 				}
 			}
 			else
 			{
 				for each (CombinedJobController* var in loads)
 				{
-					var->AddJob(new WaitForResourcesJob(aP, aM, var->ID()));
+					var->AddJob(new WaitForResourcesJob(aP, aM, var->ID(),var));
 					var->AddJob(new FinishProcessJob(aP->processID - 1, var->ID(), aM));
 					var->AddJob(new DelayJob(aM->context(), time));
 				}

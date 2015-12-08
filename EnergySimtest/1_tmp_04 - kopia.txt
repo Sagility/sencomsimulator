@@ -1,0 +1,25 @@
+Homo high,Homo high,OK
+Homo high,Homo,OK
+Homo high,Raco,OKClean
+Homo high,Heco,OKClean
+Homo high,Polymer,NOK
+Homo,Homo high,OKClean
+Homo,Homo,OK
+Homo,Raco,OKClean
+Homo,Heco,OKClean
+Homo,Polymer,NOK
+Raco,Homo high,OKClean
+Raco,Homo,OKClean
+Raco,Raco,OK
+Raco,Heco,OKClean
+Raco,Polymer,NOK
+Heco,Homo high,OKClean
+Heco,Homo,OKClean
+Heco,Raco,OKClean
+Heco,Heco,OK
+Heco,Polymer,NOK
+Polymer,Homo high,NOK
+Polymer,Homo,NOK
+Polymer,Raco,NOK
+Polymer,Heco,NOK
+Polymer,Polymer,OK

@@ -5,10 +5,6 @@
 #include <list>
 using namespace std;
 
-
-
-
-
 namespace SemconInterface
 {
 	/* POD objects*/
@@ -58,7 +54,7 @@ namespace SemconInterface
 
 		string message = "";
 		list<ResInSchedule*> _resources = list<ResInSchedule*>();
-		list<SchedJobMode*> _jobs = list<SchedJobMode*>();
+		list<SchedJob*> _jobs = list<SchedJob*>();
 	private:
 		~SenComModel();
 	};
