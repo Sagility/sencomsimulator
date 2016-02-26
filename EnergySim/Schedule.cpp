@@ -52,6 +52,7 @@ namespace EnergySim
 	}
 	void Schedule::printOutSchedule(string s1, string s2)
 	{
+		return;
 		static bool started = false;
 		string myFileName = "fileNameout.txt";
 		myFileName = "outSchedule.txt";

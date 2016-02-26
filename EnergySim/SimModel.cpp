@@ -5,6 +5,8 @@
 
 #include <fstream>
 
+/*
+*/
 
 namespace EnergySim
 {
@@ -15,7 +17,8 @@ namespace EnergySim
 		reader.itsValue->model = this;
 		env = (SimLogEnvironment*) SimLogEnvironment::CreateEnvironment();
 		env->set_use_file(true);
-		ISimEngine *engine = new SimEngine(env);
+		ISimEngine *engine = new RealSimEngine(env); //This engine runs in real time
+		//ISimEngine *engine = new SimEngine(env);
 		_ctx = new SimContext();
 		_ctx->set_engine(engine);
 		itsParser.itsValue = IParser::createParser(new AttributeHandler());
@@ -26,7 +29,6 @@ namespace EnergySim
 		itsResHandler = new ResourceHandler(this);
 		IEvent::itsClock = new Clock(_ctx->engine());
 	}
-
 
 	void SimModel::finish()
 	{
@@ -143,6 +145,9 @@ namespace EnergySim
 				string value = "";
 				for (string s : tokens)
 					value += s + " ";
+				if(tokens.size()>0)
+					if (tokens.front().find("*") ==0)
+						break;
 				aR->addStep(aSR.readLine(value));
 			}
 			closeFile();
@@ -215,15 +220,29 @@ namespace EnergySim
 			Order* aO = new Order();
 			aO->Route = tokens.front();
 			tokens.pop_front();
-			aO->ID = stoi(tokens.front(), NULL);
-			tokens.pop_front();
-			aO->Time = stoi(tokens.front(), NULL);
+			// FIX aO->ID = stoi(tokens.front(), NULL);
+			// FIX tokens.pop_front();
+			// FIX aO->Time = stoi(tokens.front(), NULL);
+			// FIX	tokens.pop_front();
+			aO->count = stoi(tokens.front(), NULL);
+
 			// aO->Time = 0; // RANDOM STUFF
 			tokens.pop_front();
 			model->orders.itsValue.push_back(aO);
 		}
 		closeFile();
 		model->inSchedule.itsValue->filterOutConcreteProcess();
+	}
+
+	void writeLogg(string s)
+	{
+		return;
+		ofstream myfile;
+		myfile.open("debuglog.txt", std::ios::app);
+		myfile << s;
+		myfile << "\n";
+		myfile.close();
+		return;
 	}
 
 	void SimModel::runModel()
@@ -234,17 +253,60 @@ namespace EnergySim
 
 //		SetterHandler::getSetterHandler()->triggerSetting(this);
 
+		CombinedJobController* aControl = new CombinedJobController(context(),"Control");
+
+		aController->push_back(aControl);
+		RealSimEngine* aRSE = (RealSimEngine*) this->context()->engine();
+		aControl->AddJob(new ControlJob(context(), 30, aControl, aRSE->itsOR));
+		_ctx->engine()->ScheduleJobNow(aControl);
+
+		double delay = 10.001;
+
 		for (Order *o : orders.itsValue)
 		{
-			CombinedJobController* aCJC = new CombinedJobController(context(), std::to_string(o->ID));
-			for (Route *r : routes.itsValue)
+			for (int i = 0; i < o->count ; i++)
 			{
-				if (r->name != o->Route)
-					continue;
-				r->createThisJobOrder(NULL, o, *aCJC);
-				aController->push_back(aCJC);
-				_ctx->engine()->ScheduleJobNow(aCJC);
-				break;
+				writeLogg(o->Route + " "+ to_string(i));
+				char buffer[33];
+				CombinedJobController* aCJC = new CombinedJobController(context(), std::to_string(o->ID) +"_" + itoa(i,buffer,10));
+				for (Route *r : routes.itsValue)
+				{
+					o->Time = 0;
+					if (r->name != o->Route)
+						continue;
+					r->createThisJobOrder(NULL, o, *aCJC);
+					if (i == o->count - 1)
+					{
+						int line = 666;
+						for (auto j : aCJC->_jobqueue)
+						{
+							WaitForResourcesJob* aWFRJ = dynamic_cast<WaitForResourcesJob*> (j);
+							if (aWFRJ != NULL)
+							{
+								line = stoi(aWFRJ->itsResReq->itsAlternates.front()->need->front().second->name());
+								break;
+							}
+						}
+						if (line < 4)
+						{
+							aCJC->AddJob(new EndOrderJob(line, this));
+							if (line==1)
+								aCJC->AddJob(new SetAttributeJob(this->itsParser.itsValue->getAttributeHandler(), "resmodeone" + to_string(line), 0, context()));
+							if (line == 2)
+								aCJC->AddJob(new SetAttributeJob(this->itsParser.itsValue->getAttributeHandler(), "resmodetwo" + to_string(line), 0, context()));
+							if (line == 3)
+								aCJC->AddJob(new SetAttributeJob(this->itsParser.itsValue->getAttributeHandler(), "resmodethree" + to_string(line), 0, context()));
+						}
+					}
+					aController->push_back(aCJC);
+					// FIX add turn off resource job as set attribute
+					//FIX _ctx->engine()->ScheduleJobNow(aCJC);
+					writeLogg(o->Route + " "+ to_string(i) + " : " + to_string(delay));
+					_ctx->engine()->ScheduleJobAt(aCJC, delay, 0);
+					delay += 0.001;
+					//_ctx->engine()->ScheduleJobAtFront(aCJC);
+					break;
+				}
 			}
 		}
 		_ctx->engine()->Run();

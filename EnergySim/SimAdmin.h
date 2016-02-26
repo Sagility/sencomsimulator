@@ -35,7 +35,9 @@ namespace EnergySim_NameConstants
 	const std::string GOTOIFSTEP = "GOTOIF";
 	const std::string RUNCONTROL = "RUNCONTROL";
 	const std::string IDSTEP = "ID";
+	const std::string DELAYFORTIMESTEP = "DELAYFORTIMESTEP";
 	const std::string EVENTSTEP = "EVENT";
+	const std::string BOTTLEDONESTEP = "BOTTLEDONESTEP";	
 }
 
 namespace EnergySim
@@ -123,6 +125,7 @@ namespace EnergySim
 		 string Route;
 		 long stepID;
 		 list<long> preReqs;
+		 int count;
 	}; 
 	class Route
 	{

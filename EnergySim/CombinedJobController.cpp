@@ -136,6 +136,10 @@ namespace EnergySim {
 		{
 			if(_current_job==theJob)_current_job=NULL;
 			theJob->MarkForDeletion();
+			//FIX
+			 //IJob* nextjob = _jobqueue.front();
+			// double d = nextjob->
+			 //nextjob->
 			_ctx->engine()->ScheduleJobNow(this);
 		}
 	}

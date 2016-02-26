@@ -4,6 +4,8 @@
 #include "SimModel.h"
 #include <ppl.h>
 
+#include "Objective.h"
+
 using namespace concurrency;
 using namespace std;
 
@@ -34,7 +36,19 @@ namespace EnergySim
 				for (pair<long, Resource*> p2 : *(p1.second->need))
 				{
 					p2.second->free(p2.first);
-					IEvent::publishEvent(ET_RESOURCE_RELEASE, vector<string>(2) = { (p2.second->name()), "LOT_" + p1.first.first });
+					//int type = 4;
+					//
+					//int lineID = 1;
+					//if (p2.second->name() == "1")
+					//	lineID = 1;
+					//if (p2.second->name() == "2")
+					//	lineID = 2;
+					//if (p2.second->name() == "3")
+					//	lineID = 3;
+					//int value = 2;
+					//((SimEngine*)model->context()->engine())->itsOR->report(type, value, lineID);
+
+			//FIX		IEvent::publishEvent(ET_RESOURCE_RELEASE, vector<string>(2) = { (p2.second->name()), "LOT_" + p1.first.first });
 					IEvent::publishEvent(ET_PROCESS_END, vector<string>(3) = { (p2.second->name()), "LOT" + std::to_string(theRouteFollowerID), std::to_string(-p2.first) });
 					if (p2.second->name() == "0")
 					{
@@ -58,6 +72,16 @@ namespace EnergySim
 		model = theModel;
 		itsAssigner = assigner;
 	}
+	void writeLogg01(string s)
+	{
+		return;
+		ofstream myfile;
+		myfile.open("debuglog.txt", std::ios::app);
+		myfile << s;
+		myfile << "\n";
+		myfile.close();
+		return;
+	}
 	WaitForResourcesJob::WaitForResourcesJob(Process* theProcess, SimModel* theModel, long theRouteFollowerID, CombinedJobController* theController)
 	{
 		itsController = theController;
@@ -66,9 +90,14 @@ namespace EnergySim
 		this->set_context(theModel->context());
 		itsRouteFollowerID = theRouteFollowerID;
 		//return;  // TESTING Remove later
+
+		return; //FIX
+		writeLogg01("A");
 		SchedElement* aSE = model->inSchedule.itsValue->getSE(itsRouteFollowerID, itsResReq->processID);
 		if (aSE == NULL)
 			return;
+		writeLogg01("B");
+
 		/* Remove the alternates that are not compatibel with the schedule */	
 		if (itsResReq->itsAlternates.size() > 1)
 		{
@@ -81,15 +110,20 @@ namespace EnergySim
 	}
 	void WaitForResourcesJob::claimResources()
 	{
+		writeLogg01("Get on list");
 		model->itsResHandler->wait(this);
 	}
+
+
 	void ResourceHandler::wait(WaitForResourcesJob* aJ)
 	{
-		SchedElement* aSE = model->inSchedule.itsValue->getSE(aJ->itsRouteFollowerID, aJ->itsResReq->processID);
-		if (aSE != NULL)
-			waiting.push_front(aJ);
-		else
-			waiting.push_back(aJ);
+		//SchedElement* aSE = model->inSchedule.itsValue->getSE(aJ->itsRouteFollowerID, aJ->itsResReq->processID);
+		//FIX
+		//if (aSE != NULL)
+		//	waiting.push_front(aJ);
+		//else
+		waiting.push_back(aJ);
+		writeLogg01(to_string(waiting.size()));
 		while (assignJob())	;
 	}
 
@@ -150,10 +184,17 @@ namespace EnergySim
 				Schedule::printOutSchedule(s1, s2);
 
 				waiting.remove(aJ);
+				writeLogg01("Finishing " +  aJ->ToString() +   " at " + to_string(model->context()->engine()->simulated_time()) + " " + to_string(waiting.size()));
 				aJ->finish();
 				vector<long> aV;
 				aV.push_back(aCP->id);
 				IEvent::publishEvent(ET_PROCESS_START, aJ->itsRouteFollowerID, aV);
+
+				//int type = 1;
+				//int lineID = 3;
+				//int value = 333;
+				//((SimEngine*)aJ->context()->engine())->itsOR->report(type,value,lineID); 
+
 				return true;
 			}
 		}
@@ -162,7 +203,6 @@ namespace EnergySim
 
 	void IJobAssigner::assignAJob(WaitForResourcesJob* aWFR, list<Resource*>* aRL)
 	{
-
 	}
 	
 	bool isEmpty(Resource* r) { if (r->free() < 1) return true; return false; }

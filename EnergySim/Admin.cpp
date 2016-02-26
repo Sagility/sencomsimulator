@@ -42,11 +42,9 @@ namespace EnergySim
 		}
 	};
 
-
 	void SetterHandler::triggerSetting(SimModel* model)
 	{
 	//	map <pair<string, double>, double*> callMap;
-
 		for(auto a : callMap)
 		{
 			CombinedJobController* aCJC = new CombinedJobController(model->context(), a.first.first); 

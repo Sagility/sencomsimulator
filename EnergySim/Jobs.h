@@ -54,6 +54,24 @@ namespace EnergySim
 		double itsValue;
 		AttributeHandler* itsHandler;
 	};
+	class BottleDoneJob : public IJob
+	{
+	public:
+		BottleDoneJob(SimModel* theModel, SimContext* theCtx, int theLine)
+		{
+			itsModel = theModel;
+			_ctx = theCtx;
+			itsLine = theLine;
+		}
+		virtual void Execute();
+		virtual void Dispose() { }
+	private:
+		SimModel* itsModel;
+		int itsLine;
+	};
+
+
+
 	class WaitForAttributeJob : public IJob, public IListenChange<string, double>
 	{
 		public: 
@@ -67,24 +85,38 @@ namespace EnergySim
 			}
 			virtual void valueChanged(string theAttribute, double theValue)
 			{
+				if (done)
+					return;
 				if (theAttribute == itsAttribute)
 					if (theValue<itsHighValue)
 						if (theValue>itsLowValue)
 						{
-							itsHandler->Changing.erase(std::remove(itsHandler->Changing.begin(), itsHandler->Changing.end(), this));
+							//FIX itsHandler->Changing.erase(std::remove(itsHandler->Changing.begin(), itsHandler->Changing.end(), this));
+							done = true;
 							NotifyJobFinished();
 						}
 			}
 			virtual void Execute()
 			{
 				NotifyJobStarted();
+				double value = itsHandler->getAttribute(itsAttribute);
+				if (value < itsHighValue)
+				{
+					if (value > itsLowValue)
+					{
+						NotifyJobFinished();
+						return;
+					}
+				}
 				itsHandler->Changing.push_back(this);
 			}
 			virtual void Dispose() { }
+			~WaitForAttributeJob(){};
 		private:
 			AttributeHandler* itsHandler;
 			double itsLowValue, itsHighValue;
 			string itsAttribute;
+			bool done = false;
 	};
 	class ENERGYSIM_DLL_PUBLIC LogJob : public IJob
 	{
@@ -146,6 +178,8 @@ namespace EnergySim
 		virtual void Execute(){};
 		virtual string classname() { return "ManipulatorJob"; }
 	};
+	
+
 	class ENERGYSIM_DLL_PUBLIC WaitForResourcesJob : public IJob
 	{
 	public:
@@ -166,6 +200,7 @@ namespace EnergySim
 		Process* itsResReq;
 		SimModel* model;
 		CombinedJobController* itsController;
+		virtual string ToString();
 	};
 	class ENERGYSIM_DLL_PUBLIC FinishProcessJob : public IJob
 	{
@@ -184,6 +219,19 @@ namespace EnergySim
 		PublishPreReqDoneJob(long thePreReqID)
 		{
 			itsPreReqID = thePreReqID;
+		}
+		virtual void Execute();
+		virtual void Dispose() { }
+	};
+	class EndOrderJob : public IJob
+	{
+	public:
+		long itsLine;
+		SimModel* itsModel;
+		EndOrderJob(long theLine, SimModel* theModel)
+		{
+			itsLine = theLine;
+			itsModel = theModel;
 		}
 		virtual void Execute();
 		virtual void Dispose() { }
@@ -233,6 +281,78 @@ namespace EnergySim
 			strs << delay;
 			std::string str = strs.str();
 			return "DelayJob waiting for " + str;
+			// not supported yet???  return "DelayJob waiting for " + std::to_string(delay);
+		}
+
+		virtual void DelayElapsed()
+		{
+			NotifyJobFinished();
+		}
+		virtual void Execute();
+		virtual string classname() { return "DelayJob"; }
+		virtual void OnElapsed(ITimer *theTimer, EventArgs *theArgs);
+		virtual void OnPreempted(ITimer *theTimer, EventArgs *theArgs);
+	};
+	
+	class ENERGYSIM_DLL_PUBLIC ControlJob : public IJob, public TimerElapsedListener
+	{
+	private:
+		double delay;
+		SimEngineTimer *_timer;
+		CombinedJobController* itsController;
+		ObjectiveReporter* itsOR;
+	public:
+		//constructor
+		ControlJob(SimContext *context, double msdelay, CombinedJobController* theController, ObjectiveReporter* theOR) ;
+		~ControlJob()
+		{
+			// clear all lists
+		}
+
+		virtual string ToString()
+		{
+			std::ostringstream strs;
+			strs << delay;
+			std::string str = strs.str();
+			return "ControlJob waiting for " + str;
+			// not supported yet???  return "DelayJob waiting for " + std::to_string(delay);
+		}
+
+		virtual void DelayElapsed();
+		virtual void Execute();
+		virtual string classname() { return "ControlJob"; }
+		virtual void OnElapsed(ITimer *theTimer, EventArgs *theArgs);
+	};
+	
+	class ENERGYSIM_DLL_PUBLIC DelayForAttributeJob : public IPreemptableJob, public TimerElapsedListener, public TimerPreemptedListener
+	{
+	private:
+		string attribute;
+		double delay;
+		SimEngineTimer *_timer;
+	public:
+		//constructor
+		DelayForAttributeJob(SimContext *context, string theAttribute) :IPreemptableJob(context)
+		{
+				set_context(context);
+				attribute = theAttribute;
+		}
+		~DelayForAttributeJob()
+		{
+			// clear all lists
+		}
+		void Preempt()
+		{
+			NotifyJobPreempted();
+			//   timer.Preempt();
+			NotifyJobFinished();
+		}
+		virtual string ToString()
+		{
+			std::ostringstream strs;
+			strs << delay;
+			std::string str = strs.str();
+			return "DelayForAttributeJob waiting for " + str;
 			// not supported yet???  return "DelayJob waiting for " + std::to_string(delay);
 		}
 

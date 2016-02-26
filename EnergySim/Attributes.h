@@ -86,9 +86,9 @@ namespace EnergySim
 			{
 				if (!itsStarted)
 				{
-					ofstream file;
-					file.open(itsFileName + ".csv", std::ios_base::out);
-					file.close();
+					//ofstream file;
+					//file.open(itsFileName + ".csv", std::ios_base::out);
+					//file.close();
 					itsStarted = true;
 				}
 				itsTime = theTime;
@@ -99,6 +99,7 @@ namespace EnergySim
 			}
 			void endReporting()
 			{
+				//FIX return;
 				std::string txt;
 				ofstream file;
 				file.open(itsFileName + ".csv", std::ios_base::out);
@@ -245,6 +246,7 @@ namespace EnergySim
 			 	aBAV->prepareUpdate();
 			 for (BaseAttributeValueHolder* aBAV : itsAttributes)
 				 aBAV->update();
+			 publishAllUpdates();
 		 }
 		void reportAllAttributes()
 		 {
@@ -259,6 +261,15 @@ namespace EnergySim
 						aFPtr->valueChanged(theAttribute, theValue);
 			}
 		 }
+		void publishAllUpdates()
+		{
+			if (Changing.size()>0)
+			{
+				for (BaseAttributeValueHolder* aBAV : itsAttributes)
+					for (IListenChange<string, double>* aFPtr : Changing)
+						aFPtr->valueChanged(aBAV->name(), aBAV->value());
+			}
+		}
 		void end()
 		 {
 		 }

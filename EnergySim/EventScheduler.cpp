@@ -7,6 +7,8 @@
 #include "SchedulableEvent.h"
 #include "SimLogEnvironment.h"
 #include "Job.h"
+#include <thread>
+#include <mutex>
 
 namespace EnergySim { 
 	bool operator<(const SchedulableEvent & se1, const SchedulableEvent & se2)
@@ -73,9 +75,24 @@ namespace EnergySim {
 		}
 		return nextdelta;
 	}
+
+
+	void writeLogg02(string s)
+	{
+		return;
+		ofstream myfile;
+		myfile.open("debuglog.txt", std::ios::app);
+		myfile << s;
+		myfile << "\n";
+		myfile.close();
+		return;
+	}
+
 	void EventScheduler::ExecuteCurrentEvents()
 	{
 		// iterate over events that should be executed 
+		writeLogg02("Current events: " + to_string(_current_events->size()));
+
 		if(_current_events->size()==0)return;
 		std::set<SchedulableEvent*,SchedulableEventPtrComp>::iterator it=_current_events->begin();
 		SchedulableEvent* se= *it;
@@ -87,9 +104,13 @@ namespace EnergySim {
 				std::ostringstream strs;
 				strs << "eventtimer_Elapsed at scheduled time" << se->time() << " will Invoke Job " << se->job()->ToString() << " with priority " << se->priority() << endl;
 
+				_lastevent = se->time(); // 160204
+
 				_env->DebugLog(strs.str());
+				writeLogg02("Current events: execute: " + se->job()->ToString());
 				ExecuteJob(se->job());
 			}
+			writeLogg02("Current events: erase ");
 			_current_events->erase(*it);
 			if(_current_events->size()>0){
 				it=_current_events->begin();
@@ -127,10 +148,19 @@ namespace EnergySim {
 		else
 			_current_events->insert(new SchedulableEvent(this->simulated_time() + 0, theJob, priority));
 	}
+
+	void EventScheduler::ScheduleJobNow(IJob *theJob, bool front)
+	{
+		SchedulableEvent * aSE = new SchedulableEvent(this->simulated_time(), theJob, 0);
+		_current_events->insert(aSE);
+	}
 	void EventScheduler::ScheduleJobNow(IJob *theJob)
 	{
 		_current_events->insert(new SchedulableEvent(this->simulated_time(), theJob, 0));
 	}
+
+
+	
 	void EventScheduler::ScheduleJobAt(IJob *theJob, double theTime, int priority)
 	{
 		if(theTime> this->simulated_time())

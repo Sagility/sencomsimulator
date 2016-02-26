@@ -120,7 +120,7 @@ namespace EnergySim {
 	{
 	protected:
 		static long _last_id;	
-		deque<IJob*> _jobqueue;
+		//deque<IJob*> _jobqueue;
 		bool _started;
 		bool _keepalive;
 		double _delay_before_forced_preempt;
@@ -129,6 +129,7 @@ namespace EnergySim {
 		IRouteFollower* itsFollower;
 
 	public:
+		deque<IJob*> _jobqueue;
 		
 		/// constructor
 		CombinedJobController(SimContext *ctx);
@@ -201,6 +202,13 @@ namespace EnergySim {
 	    double delay_before_forced_preempt() const { return _delay_before_forced_preempt;}
 		void delay_before_forced_preempt(bool delay_before_forced_preempt)  {  _delay_before_forced_preempt=delay_before_forced_preempt;}
 		bool started() const {return _started;};
-		virtual string classname() { return "CombinedJobController";}
+		virtual string classname() 
+		{ 
+			string str = "EMPTY";
+			if (_jobqueue.size() > 0)
+				str =_jobqueue.front()->ToString();
+			
+			
+			return "CombinedJobController" + str; }
 	};
 }

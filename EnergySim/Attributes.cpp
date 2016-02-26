@@ -10,10 +10,12 @@ namespace EnergySim
 {
 	void AttributeHandler::OnNextStep(ISimEngine *theEngine, NextStepEventArgs *theArgs)
 	{
+		return;
+		//FIX
 		if (theEngine->simulated_time() > 20000)
 			return;
 		replace("simdelta", new ConstantValue(theArgs->delta()));
-		updateAllAttributes();
+		//FIX updateAllAttributes();
 		reportAllAttributes(theEngine->simulated_time());
 		double d = this->getAttribute("cost");
 		IEvent::publishEvent(ET_SIMULATION_UPDATE, vector<string>(0));
@@ -98,7 +100,7 @@ namespace EnergySim
 		simDelta = simTime - lastSimTime;
 		replace("simtime", new ConstantValue(simTime));
 		replace("simdelta", new ConstantValue(simDelta));
-		reportAllAttributes(time);
+		//reportAllAttributes(time);
 	}
 	//void BaseAttributeValue::report(AttributeReporter* theReporter)
 	//{

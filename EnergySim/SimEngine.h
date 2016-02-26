@@ -8,8 +8,10 @@
 #include "EventArgs.h"
 #include "SimLogEnvironment.h"
 
-using namespace std;
+//#include "Objective.h"
+class ObjectiveReporter;
 
+using namespace std;
 namespace EnergySim {
 	// Forward declarations
 	class SimEngineTimer;
@@ -62,9 +64,11 @@ namespace EnergySim {
 	
 	class ENERGYSIM_DLL_PUBLIC ISimEngine
 	{
+	public:
+		EventScheduler *_eventscheduler;
 	protected:
 		IEnvironment *_env;
-		EventScheduler *_eventscheduler;
+		
 		bool _running;
 		double _simulated_time;
 		set<IJob*> _tobedeletedjobs;
@@ -173,7 +177,7 @@ namespace EnergySim {
 		virtual void ScheduleJob(IJob *theJob, double theDelay,int priority=0)=0;
 		virtual	void ScheduleJobNow(IJob *theJob)=0;
 		virtual void ScheduleJobAt(IJob *theJob, double theTime, int priority=0)=0;
-
+		virtual void ScheduleJobAtFront(IJob *theJob)=0;
 	};
 	class ENERGYSIM_DLL_PUBLIC SimEngine:public ISimEngine
 	{
@@ -182,6 +186,8 @@ namespace EnergySim {
 	public:
 		SimEngine(IEnvironment *env);
 		virtual SimEngine::~SimEngine();
+
+		ObjectiveReporter* itsOR;
 
 		// overriding
 		virtual void Run();
@@ -192,6 +198,25 @@ namespace EnergySim {
 
 		virtual void ScheduleJob(IJob *theJob, double theDelay,int priority=0);
 		virtual void ScheduleJobNow(IJob *theJob);
+		virtual void ScheduleJobAtFront(IJob *theJob);
 		virtual void ScheduleJobAt(IJob *theJob, double theTime, int priority=0);
+	};
+
+	class ENERGYSIM_DLL_PUBLIC RealSimEngine :public SimEngine
+	{
+	protected:
+		bool started = false;
+		double startTime;
+		double pasueTime;
+		double timeInPause;
+		bool paused = false;
+		void checkPausedStatus();
+		void pause();
+		void endPause();
+	public:
+		RealSimEngine(IEnvironment *env);
+		virtual void advance_time(double delta_time);
+
+
 	};
 }

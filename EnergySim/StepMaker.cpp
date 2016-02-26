@@ -32,6 +32,23 @@ class JobStep
 
 namespace EnergySim
 {
+	class BottleDoneStep : public Step
+	{
+		SimModel* itsModel;
+		int itsLine;
+		public: 
+			BottleDoneStep(int theLine, SimContext* theContext, SimModel* theModel)
+			{
+				itsLine = theLine;
+				itsContext = theContext;
+				itsModel = theModel;
+			}
+			void generateSpecificJobs(CombinedJobController& theController)
+			{
+				theController.AddJob(new BottleDoneJob(itsModel, itsContext, itsLine));
+			}
+	};
+
 	class DelayStep : public Step
 	{
 		long itsDelay;
@@ -46,6 +63,21 @@ namespace EnergySim
 		theController.AddJob(new DelayJob(itsContext, (int)itsDelay));
 	}
 	};
+	class DelayForAttributeStep : public Step
+	{
+		string itsDelay;
+		public: DelayForAttributeStep(string theDelay, long theID, SimContext* theContext)
+		{
+			itsDelay = theDelay;
+			itsID = theID;
+			itsContext = theContext;
+		}
+		public:  void generateSpecificJobs(CombinedJobController& theController)
+		{
+			theController.AddJob(new DelayForAttributeJob(itsContext, itsDelay));
+		}
+	};
+	
 	class GetStep : public Step
 	{
 		long itsRes;
@@ -304,6 +336,18 @@ namespace EnergySim
 			if (arg.size() > 0)
 				i = stoi(arg.front(), NULL);
 			return new DelayStep(i, 0, itsCtx);
+		}
+		if (aStepName == EnergySim_NameConstants::DELAYFORTIMESTEP)
+		{
+			if (arg.size() > 0)
+				str = stoi(arg.front(), NULL);
+			return new DelayForAttributeStep(str, 0, itsCtx);
+		}
+		if (aStepName == EnergySim_NameConstants::BOTTLEDONESTEP)
+		{
+			if (arg.size() > 0)
+				i = stoi(arg.front(), NULL);
+			return new BottleDoneStep(i,itsCtx,model);
 		}
 		if (aStepName == EnergySim_NameConstants::WAIT_ATTRIBUTE_STEP)
 		{

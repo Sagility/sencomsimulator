@@ -26,10 +26,11 @@ namespace EnergySim {
 		double _tolerance;
         bool _calculatedevent;
 
-		multiset<SchedulableEvent*,SchedulableEventPtrComp> *_current_events;
+		
 	//	set<SchedulableEvent*,SchedulableEventPtrComp> *_future_events;
 		void ExecuteCurrentEvents();
 	public :
+		multiset<SchedulableEvent*, SchedulableEventPtrComp> *_current_events;
 		EventScheduler(ISimEngine *_engine);
 		int updates_per_second(){return _updatespersecond;}
 		double simulated_time(){
@@ -43,6 +44,8 @@ namespace EnergySim {
 		void ExecuteJob(IJob *job);
 		void ScheduleJob(IJob *theJob, double theDelay,int priority=0);
 		void EventScheduler::ScheduleJobNow(IJob *theJob);
+		//FIX BELOW
+		void EventScheduler::ScheduleJobNow(IJob *theJob, bool front);
 		void EventScheduler::ScheduleJobAt(IJob *theJob, double theTime, int priority=0);
 		// IJobFinishedListener
 		virtual void OnJobFinished(IJob *theJob, EventArgs *theArgs);

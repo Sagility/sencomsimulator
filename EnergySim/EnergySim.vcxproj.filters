@@ -108,6 +108,9 @@
     <ClInclude Include="ComplexResources.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Objective.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="EnergySim.cpp">
@@ -183,6 +186,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="ComplexResources.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Objective.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

@@ -1,12 +1,17 @@
-simtime	0 simtime+simdelta
-simdelta 0 simdelta	
-currenttemp	130	currenttemp + sectemp * simdelta
-sectemp 	0	tempdelta/20 
-tempdelta	0	2*energyusage-1
-energyusage	0	memoryswitch(lessthan(currenttemp,lowtarget),lessthan(targettemp,currenttemp),energyusage)
-aa	0	lessthan(targettemp,currenttemp)
-bb	0  	lessthan(currenttemp,lowtarget)
-targettemp	200	targettemp
-lowtarget	160	lowtarget
-ovenon	0 ovenon
-oventemp	200	oventemp+ovenon*simdelta/100
+simdelta	0	0
+coolfactor	10	10
+restempone	50	restempone + reschangeone * simdelta / coolfactor
+reschangeone	0	lessthan(0.9,resmodeone) * 10 - lessthan(50,restempone) - lessthan(130,restempone) * 10
+resmodeone	0	resmodeone
+restemptwo	50	restemptwo + reschangetwo * simdelta / coolfactor
+reschangetwo	0	lessthan(0.9,resmodetwo) * 10 - lessthan(50,restemptwo) - lessthan(130,restemptwo) * 10
+resmodetwo	0	resmodetwo
+restempthree	50	restempthree + reschangethree * simdelta / coolfactor
+reschangethree	0	lessthan(0.9,resmodethree) * 10 - lessthan(50,restempthree) - lessthan(130,restempthree) * 10
+resmodethree	0	resmodethree
+respowerone	50000	50000
+respowertwo	50000	50000
+respowerthree	50000	50000
+restimeone	10	10
+restimetwo	10	10
+restimethree	10	10

@@ -4,7 +4,117 @@
 #include "SimEngine.h"
 #include "EventScheduler.h"
 
+#include "Objective.h"
+
 namespace EnergySim { 
+
+	RealSimEngine::RealSimEngine(IEnvironment *env) : SimEngine(env)
+	{
+		startTime = clock() / CLOCKS_PER_SEC;
+		pasueTime = 0;
+		timeInPause = 0;
+		itsOR = new ObjectiveReporter();
+		itsOR->itsEngine = this;
+		itsOR->init();
+	}
+
+	void RealSimEngine::advance_time(double delta_time)
+	{
+		// Wait until time has passed
+		if (!started)
+		{
+			started = true;
+			startTime = clock() / CLOCKS_PER_SEC;
+		}
+		double now = clock() / CLOCKS_PER_SEC;
+		double next = this->simulated_time() + delta_time + startTime - timeInPause;
+
+		//itsOR->report(1,5000000,now*1000,1);
+
+		/*
+		int randNum = rand() % (3 - 1 + 1) + 1;
+
+		double phase = now;
+
+		int type = rand() % (3 - 0 + 1) + 0;
+		int lineID = rand() % (3 - 1 + 1) + 1;
+		int value = 0;
+		if (type == 0)  // MAIN
+		{
+			while (phase > 100)
+				phase -= 100;
+			phase = phase / 100;
+			value = 22000 + phase*15000;
+		}
+		if (type == 1)  // Extruder
+		{
+			while (phase > 80)
+				phase -= 80;
+			phase = phase / 80;
+			value = 14400 + phase * 200;
+		}
+		if (type ==2)  // Grinder
+		{
+			while (phase > 40)
+				phase -= 40;
+			phase = phase / 40;
+			value = 1300 + phase * 200;
+		}
+		if (type == 3)  // Hydraulic
+		{
+			phase += 30;
+			while (phase > 100)
+				phase -= 100;
+			phase = phase / 100;
+			value = 2000 + phase * 14000;
+		}
+		*/
+
+		//FIX itsOR->report(type, value, lineID); // type,value, lineID   // Type 5 = new order
+		while (next > now)
+		{
+			_sleep(10);
+			now = clock() / CLOCKS_PER_SEC;
+			
+			//FIX next = this->simulated_time() + delta_time + startTime - timeInPause;
+
+			//checkPausedStatus();
+			//if (paused)
+			//	pause();
+			//else
+			//	endPause();
+			// break;  // MUSTGO
+		}
+
+		SimEngine::advance_time(delta_time);
+		itsOR->itsModel->itsParser.itsValue->getAttributeHandler()->updateSimVariabels(simulated_time());
+		itsOR->itsModel->itsParser.itsValue->getAttributeHandler()->updateAllAttributes();
+		itsOR->itsModel->itsParser.itsValue->getAttributeHandler()->reportAllAttributes(simulated_time());
+	}
+	void RealSimEngine::checkPausedStatus()
+	{
+		if (FILE *file = fopen("FRED.KLM", "r")) 
+		{
+			fclose(file);
+			paused = true;
+		}
+		else 
+		{
+			paused = false;
+		}
+	
+	}
+	void RealSimEngine::pause()
+	{
+		pasueTime = clock() / CLOCKS_PER_SEC;
+		paused = true;
+		//timeInPause
+	}
+	void RealSimEngine::endPause()
+	{
+		
+		paused = false;
+	}
 
 	SimEngine::SimEngine(IEnvironment *env)
 	{
@@ -22,7 +132,7 @@ namespace EnergySim {
 		set<IJob*>::iterator it;
 		for(it=_tobedeletedjobs.begin(); it!=_tobedeletedjobs.end(); it++)
 		{
-			delete (*it);
+			//FIX delete (*it);
 		}
 		_tobedeletedjobs.clear();
 	}
@@ -87,6 +197,10 @@ namespace EnergySim {
 	void SimEngine::ScheduleJobNow(IJob *theJob)
 	{
 		_eventscheduler->ScheduleJobNow(theJob);
+	}
+	void SimEngine::ScheduleJobAtFront(IJob *theJob)
+	{
+		_eventscheduler->ScheduleJobNow(theJob, true );
 	}
 	void SimEngine::ScheduleJobAt(IJob *theJob, double theTime, int priority)
 	{

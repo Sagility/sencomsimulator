@@ -19,6 +19,8 @@ namespace EnergySim {
 		int _priority;
 		double _time;
 		IJob* _job;
+		//FIX
+		//static int globalPrio;
 	public: 
 		/// <summary>
 		/// Constructor 
@@ -37,14 +39,29 @@ namespace EnergySim {
 		double time()const{ return _time;}
 		void set_time(double t){_time=t;}
 		IJob* job() const{ return _job;}
-
+		//FIX
+		int front = 0;
 
 	};
+
+	void writeMyShitLog(string str )
+	{
+		return;
+		ofstream myfile;
+		myfile.open("mytestlog.txt", std::ios::app);
+		myfile << str;
+		myfile << "\n";
+		myfile.close();
+		return;
+	}
+
 	struct SchedulableEventPtrComp
 	{
 		bool operator()(const SchedulableEvent* se1, const SchedulableEvent* se2) const{ 
+
 			if(se1->time() < se2->time()) return true;
-			if(se1->time() > se2->time())return false;
+			if(se1->time() > se2->time()) return false;
+
 			if(se1->priority() < se2->priority())return true;
 			if(se1->priority() > se2->priority())return false;
 		//	return false; // Change 150920

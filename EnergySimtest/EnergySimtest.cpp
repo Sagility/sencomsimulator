@@ -30,6 +30,8 @@
 #include<iostream>
 #include "SemconInterface.h"
 
+#include "Objective.h"
+
 using namespace SemconInterface;
 
 using namespace std;
@@ -38,7 +40,7 @@ using namespace EnergySim;
 
 void writeLog(int i)
 {
-//	return;
+	return;
 	ofstream myfile;
 	myfile.open("mytestlog.txt",std::ios::app);
 	myfile << i;
@@ -49,11 +51,12 @@ void writeLog(int i)
 // int _tmain(int argc, _TCHAR* argv[])
 //int main2(int argc, char* argv[]);
 int main3(int argc, char* argv[]);
+int mainObjective(int argc, char* argv[]);
 
 
 int main(int argc, char* argv[])
 {
-	return main3(argc, argv);
+	return mainObjective(argc, argv);
 
 
 	return SemconInterface::internalMain(argc, argv);
@@ -140,6 +143,37 @@ void doTest(string s)
 	string ret = s;
 	int k = 23;
 }
+
+int mainObjective(int argc, char* argv[])
+{
+	createLogger();
+	writeLog(10);
+	SimModel* aM = new SimModel();
+	writeLog(11);
+	aM->readModel();
+	writeLog(12);
+	try
+	{
+		aM->runModel();
+		double slutet = aM->context()->engine()->simulated_time();
+		writeLog(slutet);
+		return 0;
+		AttributeHandler* aAH = aM->itsParser.itsValue->getAttributeHandler();
+		//delete aM;
+		writeLog(999);
+		return 0;
+
+	}
+	catch (...)
+	{
+		writeLog(666);
+		return 0;
+	}
+	writeLog(18);
+	writeLog(19);
+	return 0;
+}
+
 int main3(int argc, char* argv[])
 {
 	createLogger();

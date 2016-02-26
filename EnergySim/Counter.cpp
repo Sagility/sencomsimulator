@@ -7,7 +7,7 @@ namespace EnergySim
 {
 	void writeMyLogger(string s)
 	{
-		//return;
+		return;
 		ofstream myfile;
 		myfile.open("mytestlogCounter.txt", std::ios::app);
 		myfile << s;

@@ -192,7 +192,6 @@ namespace SemconInterface
 
 		list<SchedJob*>* aL = new list<SchedJob*>();
 
-
 		while (aCount > 0)
 		{
 			SchedJob* aSJ = new SchedJob();
@@ -267,7 +266,6 @@ namespace SemconInterface
 		create an object according to following function
 		set value in object to TAG value
 
-
 		Node* , string TAG, Object creator*, object member*
 
 		string*
@@ -287,7 +285,6 @@ namespace SemconInterface
 			T* aPtr = new T();
 			aPtr->*theValue =45;
 			aRet->push_back(aPtr);
-
 		}
 
 		//DOMNodeList* aDNL = node->getElementsByTagName(temp);
@@ -489,13 +486,10 @@ namespace SemconInterface
 		SenComModel* aModel = SenComModel::getModel(inFile1, inFile2);
 		aModel->geResources(inFile1, inFile2); 
 		aModel->getJobs(inFile1, inFile2);
-
 		return 0;
 	}
 
-
-
-	/* Övrigt nedanför denna*/
+	/* Övrigt nedanför denna */
 	int rain(int argc, char* argv[])
 	{
 		//return main3(argc, argv);
@@ -508,8 +502,6 @@ namespace SemconInterface
 			cout << "Error during initialization! :\n";
 			return 1;
 		}
-
-
 
 
 		//DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
@@ -632,8 +624,6 @@ namespace SemconInterface
 		double slutet = aM->context()->engine()->simulated_time();
 		delete aM;
 		return 0;
-
-
 
 		list<CombinedJobController*> loads = list<CombinedJobController*>();
 		for (int i = 0; i < 1000; i++)
